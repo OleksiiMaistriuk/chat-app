@@ -1,8 +1,17 @@
 import { Card, Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 
+type Props = {
+  onSetIsLogin: () => void;
+};
+
 //    <ToastContainer className="p-3" position={position}></ToastContainer>
-export const RegisterPage = () => {
+export const RegisterPage = ({ onSetIsLogin }: Props) => {
+  const handleClick = (e: React.SyntheticEvent): void => {
+    console.log(e);
+    e.preventDefault();
+    onSetIsLogin();
+  };
   return (
     <>
       <Card className="flex">
@@ -26,9 +35,9 @@ export const RegisterPage = () => {
           </Form>
         </Card.Body>
         <Card.Footer className="text-muted">
-          You have account?
-          <a href="" className="">
-            Login
+          You don't have account?{" "}
+          <a href="" className="" onClick={handleClick}>
+            Register
           </a>
         </Card.Footer>
       </Card>
