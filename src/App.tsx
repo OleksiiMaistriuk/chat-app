@@ -19,7 +19,7 @@ function App() {
           <Route index element={<Chat />} />
           <Route path="complited" element={<Complited />} />
           <Route path="new-message" element={<Message />} />
-          <Route path="active" element={<Chat />} />
+          <Route path="tasks" element={<Chat />} />
         </Route>
         <Route path="/auth" element={<AuthContainer />} />
         <Route path="*" element={<NotFounPage />} />
