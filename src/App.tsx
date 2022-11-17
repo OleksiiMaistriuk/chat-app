@@ -1,5 +1,5 @@
 // import { AuthContainer } from "pages/AuthContainer";
-import { AuthContainer } from "pages/AuthContainer";
+import { AuthPage } from "pages/AuthPage";
 import { Chat } from "pages/components/Chat";
 import { Complited } from "pages/components/Complited";
 import { Message } from "pages/components/Message";
@@ -21,7 +21,7 @@ function App() {
           <Route path="new-message" element={<Message />} />
           <Route path="tasks" element={<Chat />} />
         </Route>
-        <Route path="/auth" element={<AuthContainer />} />
+        <Route path="/auth" element={<AuthPage />} />
         <Route path="*" element={<NotFounPage />} />
       </Routes>
       {/* <AuthContainer></AuthContainer> */}

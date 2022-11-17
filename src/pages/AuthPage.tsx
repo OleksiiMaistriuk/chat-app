@@ -2,7 +2,7 @@ import { LoginPage } from "pages/LoginPage";
 import { RegisterPage } from "pages/RegisterPage";
 import { useState } from "react";
 
-export const AuthContainer = () => {
+export const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (

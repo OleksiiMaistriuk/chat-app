@@ -32,10 +32,9 @@ export const LoginPage = ({ onSetIsLogin }: Props) => {
         </Card.Body>
 
         <Card.Footer className="text-muted">
-          {" "}
-          You have account?
+          You don't have account?{" "}
           <a href="" className="" onClick={handleClick}>
-            Login
+            Register
           </a>
         </Card.Footer>
       </Card>
