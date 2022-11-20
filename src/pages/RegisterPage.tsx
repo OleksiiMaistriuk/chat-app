@@ -3,6 +3,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 
 import { db } from "./../firebase/firebase";
@@ -13,6 +14,8 @@ type Props = {
 //    <ToastContainer className="p-3" position={position}></ToastContainer>
 export const RegisterPage = ({ onSetIsLogin }: Props) => {
   const [err, setErr] = useState(false);
+  const navigate = useNavigate();
+
   const handleClick = (e: React.SyntheticEvent): void => {
     e.preventDefault();
     onSetIsLogin();
@@ -33,6 +36,7 @@ export const RegisterPage = ({ onSetIsLogin }: Props) => {
         uid: res.user.uid,
         name: res.user.displayName,
       });
+      navigate("/");
       // const storageRef = ref(storage, "images/rivers.jpj");
 
       // const uploadTask = uploadBytesResumable(storageRef, displayName);
@@ -58,7 +62,6 @@ export const RegisterPage = ({ onSetIsLogin }: Props) => {
       //   }
       // );
       console.log(res.user);
-      setErr(false);
     } catch (error) {
       setErr(true);
     }
