@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../../firebase/firebase";
+import { auth } from "../firebase/firebase";
 // type Props = {
 //   onSetIsLogin: () => void;
 // };

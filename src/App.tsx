@@ -6,17 +6,17 @@ import NotFounPage from "pages/NotFounPage";
 import { Container } from "react-bootstrap";
 import { Route, Routes } from "react-router";
 // import { Navigate } from "react-router-dom";
-import { Register } from "pages/components/Register";
+import { Register } from "pages/Register";
 
 import { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "./context/AuthContext";
-import { Login } from "./pages/components/Login";
+import { Login } from "./pages/Login";
 function App() {
   //@ts-ignore
   const { currentUser } = useGlobalContext();
   const navigate = useNavigate();
-  console.log(currentUser);
+
 
   useEffect(() => {
     // !currentUser ? navigate("/auth") : navigate("/");

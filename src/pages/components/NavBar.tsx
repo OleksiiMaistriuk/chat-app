@@ -10,7 +10,6 @@ export const NavBar = () => {
   return (
     <div className="d-flex align-items-center">
       <p className="me-3 h4 text-light">{currentUser.displayName}</p>
-      {/* <Link to="/auth " className="text-decoration-none"> */}{" "}
       <Button
         onClick={() => signOut(auth)}
         variant="light"
@@ -18,7 +17,6 @@ export const NavBar = () => {
       >
         logout{" "}
       </Button>
-      {/* </Link> */}
     </div>
   );
 };
