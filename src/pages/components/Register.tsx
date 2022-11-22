@@ -3,23 +3,23 @@ import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebase";
+import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../../firebase/firebase";
 
-import { db } from "./../firebase/firebase";
-type Props = {
-  onSetIsLogin: () => void;
-};
+import { db } from "../../firebase/firebase";
+// type Props = {
+//   onSetIsLogin: () => void;
+// };
 
 //    <ToastContainer className="p-3" position={position}></ToastContainer>
-export const RegisterPage = ({ onSetIsLogin }: Props) => {
+export const Register = () => {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
 
-  const handleClick = (e: React.SyntheticEvent): void => {
-    e.preventDefault();
-    onSetIsLogin();
-  };
+  // const handleClick = (e: React.SyntheticEvent): void => {
+  //   e.preventDefault();
+  //   onSetIsLogin();
+  // };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -37,37 +37,14 @@ export const RegisterPage = ({ onSetIsLogin }: Props) => {
         name: res.user.displayName,
       });
       navigate("/");
-      // const storageRef = ref(storage, "images/rivers.jpj");
 
-      // const uploadTask = uploadBytesResumable(storageRef, displayName);
-
-      // uploadTask.on(
-      //   "state_changed",
-
-      //   (error) => {
-      //     console.log(error);
-      //   },
-
-      //   () => {
-      //     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-      //       await updateProfile(res.user, {
-      //         displayName,
-      //         photoURL: downloadURL,
-      //       });
-      //       await setDoc(doc(db, "users", res.user.uid), {
-      //         uid: res.user.uid,
-      //         displayName,
-      //       });
-      //     });
-      //   }
-      // );
       console.log(res.user);
     } catch (error) {
       setErr(true);
     }
   };
   return (
-    <>
+    <div className="m-auto " style={{ maxWidth: "500px" }}>
       <Card className="flex">
         <Card.Header as="h5">Register</Card.Header>
         <Card.Body>
@@ -89,12 +66,12 @@ export const RegisterPage = ({ onSetIsLogin }: Props) => {
         </Card.Body>
         <Card.Footer className="text-muted">
           {" "}
-          You have account?
-          <a href="" className="" onClick={handleClick}>
-            Login
-          </a>
+          You have account?<Link to="/login"> Login</Link>
+          {/* <a href="" className="" onClick={handleClick}> */}
+          {/* Login
+          </a> */}
         </Card.Footer>
       </Card>
-    </>
+    </div>
   );
 };

@@ -1,22 +1,24 @@
 import { signOut } from "firebase/auth";
+import { useContext } from "react";
 import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
+import { AuthContext } from "./../../context/AuthContext";
+
 export const NavBar = () => {
+  // @ts-ignore
+  const { currentUser } = useContext(AuthContext);
   return (
     <div className="d-flex align-items-center">
-      <p className="me-3 h4 text-light">user name</p>
-
-      <Link to="/auth " className="text-decoration-none">
-        {" "}
-        <Button
-          onClick={() => signOut(auth)}
-          variant="light"
-          className="text-decoration-none d-flex align-items-center fs-6 text fw-bold text-muted"
-        >
-          logout{" "}
-        </Button>
-      </Link>
+      <p className="me-3 h4 text-light">{currentUser.displayName}</p>
+      {/* <Link to="/auth " className="text-decoration-none"> */}{" "}
+      <Button
+        onClick={() => signOut(auth)}
+        variant="light"
+        className="text-decoration-none d-flex align-items-center fs-6 text fw-bold text-muted"
+      >
+        logout{" "}
+      </Button>
+      {/* </Link> */}
     </div>
   );
 };

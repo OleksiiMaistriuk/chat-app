@@ -1,4 +1,3 @@
-import { AuthPage } from "pages/AuthPage";
 import { Chat } from "pages/components/Chat";
 import { Complited } from "pages/components/Complited";
 import { Message } from "pages/components/Message";
@@ -7,9 +6,12 @@ import NotFounPage from "pages/NotFounPage";
 import { Container } from "react-bootstrap";
 import { Route, Routes } from "react-router";
 // import { Navigate } from "react-router-dom";
+import { Register } from "pages/components/Register";
+
 import { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "./context/AuthContext";
+import { Login } from "./pages/components/Login";
 function App() {
   //@ts-ignore
   const { currentUser } = useGlobalContext();
@@ -22,7 +24,7 @@ function App() {
 
   const ProtectedRoute = ({ children }: any) => {
     if (!currentUser) {
-      return <Navigate to="/auth" replace />;
+      return <Navigate to="/login" replace />;
     }
 
     return children;
@@ -33,7 +35,7 @@ function App() {
         <Route
           path="/"
           element={
-            <ProtectedRoute currentUser={currentUser}>
+            <ProtectedRoute>
               <Home />
             </ProtectedRoute>
           }
@@ -43,7 +45,10 @@ function App() {
           <Route path="new-message" element={<Message />} />
           <Route path="tasks" element={<Chat />} />
         </Route>
-        <Route path="/auth" element={<AuthPage />} />
+        {/* <Route path="/auth" element={<AuthPage />}> */}
+        <Route path="register" element={<Register />} />
+        <Route path="login" element={<Login />} />
+        {/* </Route> */}
         <Route path="*" element={<NotFounPage />} />
       </Routes>
     </Container>

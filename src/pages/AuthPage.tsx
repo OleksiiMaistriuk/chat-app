@@ -1,5 +1,3 @@
-import { LoginPage } from "pages/LoginPage";
-import { RegisterPage } from "pages/RegisterPage";
 import { useState } from "react";
 
 export const AuthPage = () => {
@@ -7,11 +5,11 @@ export const AuthPage = () => {
 
   return (
     <div className="m-auto " style={{ maxWidth: "500px" }}>
-      {isLogin ? (
-        <RegisterPage onSetIsLogin={() => setIsLogin(!isLogin)} />
-      ) : (
+      {/* {isLogin ? (
         <LoginPage onSetIsLogin={() => setIsLogin(!isLogin)} />
-      )}
+      ) : (
+        <RegisterPage onSetIsLogin={() => setIsLogin(!isLogin)} />
+      )} */}
     </div>
   );
 };

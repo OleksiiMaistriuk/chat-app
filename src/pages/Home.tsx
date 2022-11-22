@@ -59,12 +59,7 @@ export const Home = () => {
           <NavBar></NavBar>
         </Card.Header>
         <Card.Body className="bg-dark text-white bg-opacity-50 rounded-bottom">
-          {/* <Card.Title>title</Card.Title> */}
-
-          <Card.Text>
-            <Outlet />
-          </Card.Text>
-          {/* <Button variant="primary">button</Button> */}
+          <Outlet />
         </Card.Body>
       </Card>
     </div>
