@@ -1,25 +1,18 @@
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebase";
+import { auth, db } from "../firebase/firebase";
 
-import { db } from "../firebase/firebase";
-// type Props = {
-//   onSetIsLogin: () => void;
-// };
-
-//    <ToastContainer className="p-3" position={position}></ToastContainer>
 export const Register = () => {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
-
-  // const handleClick = (e: React.SyntheticEvent): void => {
-  //   e.preventDefault();
-  //   onSetIsLogin();
-  // };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -32,10 +25,16 @@ export const Register = () => {
       await updateProfile(res.user, {
         displayName,
       });
+
       await setDoc(doc(db, "users", res.user.uid), {
         uid: res.user.uid,
         name: res.user.displayName,
       });
+
+      await setDoc(doc(db, "usersChats", res.user.uid), {});
+
+      await signInWithEmailAndPassword(auth, email, password);
+
       navigate("/");
 
       console.log(res.user);

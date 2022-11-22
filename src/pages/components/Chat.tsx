@@ -8,9 +8,6 @@ export const Chat = () => {
         role="button"
         className="rounded-start rounded-end  overflow-hidden bg-success shadow  "
       >
-        {/* <Card.Header className="bg-info" as="h5">
-          Name
-        </Card.Header> */}
         <Card.Body className="p-1 bg-opacity-10 bg-success d-flex gap-2 align-items-center d-flex justify-content-between">
           <div className="d-flex gap-4">
             <Card.Title>Time</Card.Title>

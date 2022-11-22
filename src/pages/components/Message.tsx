@@ -13,11 +13,12 @@ import { Button, Form } from "react-bootstrap";
 
 export const Message = () => {
   const [user, setUser] = useState<any>({
-    name: "qwert",
-    uid: "zVKISKe0iqg6DQoBTmEre2zJ97F2",
+    name: "qwertyuiop",
+    uid: "dYSvgiN3zjW3O4kHReUDE85AmPy1",
   });
   //@ts-ignore
   const { currentUser } = useGlobalContext();
+  console.log("currentUser", currentUser.displayName);
   const createUserChat = async () => {
     const combinedId =
       currentUser.uid > user.uid
@@ -30,15 +31,18 @@ export const Message = () => {
       if (!res.exists()) {
         //create a chat in chat colection
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
+
         // create users chat
-        await updateDoc(doc(db, "userChats", currentUser.uid), {
+        console.log("currentUser", currentUser);
+        await updateDoc(doc(db, "usersChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
             uid: user.uid,
-            displayName: user.displayName,
+            displayName: user.name,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
-        await updateDoc(doc(db, "userChats", user.uid), {
+        console.log("user", user);
+        await updateDoc(doc(db, "usersChats", user.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
