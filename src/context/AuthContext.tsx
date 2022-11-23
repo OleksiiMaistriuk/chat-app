@@ -23,6 +23,6 @@ export const AuthContextProvider = ({ children }: any) => {
     </>
   );
 };
-export const useGlobalContext = () => {
+export const useAuthContext = () => {
   return useContext(AuthContext);
 };

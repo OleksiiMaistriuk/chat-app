@@ -1,6 +1,6 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { Button, Card, InputGroup } from "react-bootstrap";
+import { useState } from "react";
+import { Button, Card, Form, InputGroup } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
 export const Complited = () => {
   const [userName, setUserName] = useState("");
@@ -29,7 +29,7 @@ export const Complited = () => {
     <div className="m-auto ">
       <span>{user}</span>
       <InputGroup className="mb-3">
-        <input
+        <Form.Control
           placeholder="Recipient's username"
           aria-label="Recipient's username"
           aria-describedby="basic-addon2"

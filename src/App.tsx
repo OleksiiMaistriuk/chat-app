@@ -10,13 +10,12 @@ import { Register } from "pages/Register";
 
 import { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { useGlobalContext } from "./context/AuthContext";
+import { useAuthContext } from "./context/AuthContext";
 import { Login } from "./pages/Login";
 function App() {
   //@ts-ignore
-  const { currentUser } = useGlobalContext();
+  const { currentUser } = useAuthContext();
   const navigate = useNavigate();
-
 
   useEffect(() => {
     // !currentUser ? navigate("/auth") : navigate("/");
