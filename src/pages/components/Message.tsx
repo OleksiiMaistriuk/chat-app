@@ -2,31 +2,52 @@ import { useAuthContext } from "context/AuthContext";
 import { useUserContext } from "context/UserContext";
 import {
   arrayUnion,
+  collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
+  query,
   serverTimestamp,
   setDoc,
   Timestamp,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
 import { v4 as uuid } from "uuid";
 import { db } from "../../firebase/firebase";
 
 export const Message = () => {
-  // const [user, setUser] = useState<any>({
-  //   name: "qwertyuiop",
-  //   uid: "dYSvgiN3zjW3O4kHReUDE85AmPy1",
-  // });
   const [chats, setChats] = useState<any | {}>({});
   const [text, setText] = useState("");
+  const [user, setUsera] = useState<any>({});
 
   //@ts-ignore
   const { currentUser } = useAuthContext();
+
   //@ts-ignore
   const { dispatch, data } = useUserContext();
+
+  const heandleSearch = async (userName: string) => {
+    const q = query(collection(db, "users"), where("name", "==", userName));
+
+    try {
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        dispatch({ type: "CHANGE_USER", payload: doc.data() });
+        setUsera(doc.data());
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // useEffect(() => {
+  // }, []);
+
   //get chats
   useEffect(() => {
     const getChats = () => {
@@ -43,14 +64,12 @@ export const Message = () => {
     currentUser.uid && getChats();
   }, [currentUser.uid]);
 
-  console.log("currentUser", currentUser.displayName);
-
   const createUserChat = async () => {
     const combinedId =
-      currentUser.uid > data.user.uid
-        ? currentUser.uid + data.user.uid
-        : data.user.uid + currentUser.uid;
-    console.log("combineId", combinedId);
+      currentUser.uid > user.uid
+        ? currentUser.uid + user.uid
+        : user.uid + currentUser.uid;
+
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
 
@@ -59,19 +78,15 @@ export const Message = () => {
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
         // create users chat
-        console.log("currentUser", currentUser);
-
         await updateDoc(doc(db, "usersChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
-            uid: data.user.uid,
-            displayName: data.user.displayName,
+            uid: user.uid,
+            displayName: user.name,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
 
-        console.log("user", data);
-
-        await updateDoc(doc(db, "usersChats", data.user.uid), {
+        await updateDoc(doc(db, "usersChats", user.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
@@ -86,52 +101,61 @@ export const Message = () => {
 
   const handleSend = async (e: any) => {
     e.preventDefault();
-    createUserChat();
+    await createUserChat();
 
-    console.log("text", text);
-    console.log("data.chatId", data.chatId);
-    console.log("data", data);
-    console.log("data.user", data.user);
+    try {
+      await updateDoc(doc(db, "chats", data.chatId), {
+        messages: arrayUnion({
+          id: uuid(),
+          text,
+          senderName: currentUser.displayName,
+          date: Timestamp.now(),
+          dateNow: Date.now(),
+        }),
+      });
 
-    await updateDoc(doc(db, "chats", data.chatId), {
-      message: arrayUnion({
-        id: uuid(),
-        text,
-        senderName: currentUser.displayName,
-        date: Timestamp.now(),
-        dateNow: Date.now(),
-      }),
-    });
+      await updateDoc(doc(db, "usersChats", currentUser.uid), {
+        [data.chatId + ".lastMessage"]: { text },
+        [data.chatId + ".date"]: serverTimestamp(),
+      });
 
-    await updateDoc(doc(db, "usersChats", currentUser.uid), {
-      [data.chatId + ".lastMessage"]: { text },
-      [data.chatId + ".date"]: serverTimestamp(),
-    });
-
-    await updateDoc(doc(db, "usersChats", data.user.uid), {
-      [data.chatId + ".lastMessage"]: { text },
-      [data.chatId + ".date"]: serverTimestamp(),
-    });
-    setText("");
+      await updateDoc(doc(db, "usersChats", user.uid), {
+        [data.chatId + ".lastMessage"]: { text },
+        [data.chatId + ".date"]: serverTimestamp(),
+      });
+      setText("");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleSelect = (user: any) => {
-    dispatch({ type: "CHANGE_USER", payload: user });
+  const handleKeyDown = (e: any) => {
+    e.code === "Enter" && heandleSearch(e.target.value);
   };
 
   return (
     <div className="m-auto">
-      {Object.entries(chats)?.map((chat: any) => (
-        <span key={chat[0]} onClick={() => handleSelect(chat[1].userInfo)}>
-          {chat[1].userInfo.displayName}
-        </span>
-      ))}
+      <InputGroup className="mb-3">
+        <Form.Control
+          placeholder="Recipient's username"
+          aria-label="Recipient's username"
+          aria-describedby="basic-addon2"
+          onKeyDown={handleKeyDown}
+        />
+      </InputGroup>
+      {/* {chats &&
+        Object.entries(chats)?.map((chat: any) => (
+          <span key={chat[0]} onClick={() => handleSelect(chat[1].userInfo)}>
+            {chat[1].userInfo.displayName}
+          </span>
+        ))} */}
       <Form onSubmit={(e: any) => handleSend(e)}>
         {/* <Form.Select id="disabledSelect" className="mb-3">
           {Object.entries(chats)?.map((chat: any) => (
             <option key={chat[0]}>{chat[1].userInfo.displayName}</option>
           ))}
         </Form.Select> */}
+        {data.user.name && <span>{data.user.name}</span>}
         <Form.Group className="mb-3" controlId="message">
           <Form.Label>Message</Form.Label>
           <Form.Control
