@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query } from "firebase/firestore";
 import { useState } from "react";
 import { Button, Card, Form, InputGroup } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
@@ -6,10 +6,10 @@ export const Complited = () => {
   const [userName, setUserName] = useState("");
   const [user, setUser] = useState("");
   const [err, setErr] = useState(false);
-  console.log(userName);
+
   const heandleSearch = async () => {
-    console.log("enter");
-    const q = query(collection(db, "users"), where("name", "==", userName));
+    const q = query(collection(db, "users"));
+
     try {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
@@ -51,6 +51,8 @@ export const Complited = () => {
           <Card.Text>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi,
           </Card.Text>
+
+          {/* <CloseButton /> */}
         </Card.Body>
       </Card>
     </div>

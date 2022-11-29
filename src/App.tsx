@@ -1,6 +1,6 @@
-import { Chat } from "pages/components/Chat";
 import { Complited } from "pages/components/Complited";
 import { Message } from "pages/components/Message";
+import { Tasks } from "pages/components/Tasks";
 import { Home } from "pages/Home";
 import NotFounPage from "pages/NotFounPage";
 import { Container } from "react-bootstrap";
@@ -39,10 +39,10 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Chat />} />
+          <Route index element={<Tasks />} />
           <Route path="complited" element={<Complited />} />
           <Route path="new-message" element={<Message />} />
-          <Route path="tasks" element={<Chat />} />
+          <Route path="tasks" element={<Tasks />} />
         </Route>
         {/* <Route path="/auth" element={<AuthPage />}> */}
         <Route path="register" element={<Register />} />
