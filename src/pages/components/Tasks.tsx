@@ -1,3 +1,4 @@
+import { useAuthContext } from "context/AuthContext";
 import {
   collection,
   deleteDoc,
@@ -21,11 +22,13 @@ export const Tasks = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [taskId, setTaskId] = useState("");
   const [editedTask, setEditedTask] = useState("");
+
   const navigate = useNavigate();
 
   //@ts-ignore
   const { data } = useUserContext();
-
+  //@ts-ignore
+  const { currentUser } = useAuthContext();
   const collectionRef = collection(db, "tasks");
 
   useEffect(() => {
@@ -79,67 +82,39 @@ export const Tasks = () => {
       console.log(error);
     }
   };
+  const backBCAfterTime = (createdDate: any) => {
+    const date = new Date();
+    const FIVE_MIN = 5 * 60 * 1000;
+
+    if (date.getTime() - new Date(createdDate).getTime() > FIVE_MIN) {
+      return { backgroundColor: "#cc2c27" };
+    } else {
+      return { backgroundColor: "#038138" };
+    }
+  };
+
   return (
     <>
-      {messages.map((message: any) => (
-        <div className="m-auto mb-3" key={message.id}>
-          <Card
-            role="button"
-            className="rounded-start rounded-end  overflow-hidden bg-success shadow  "
-          >
-            <Card.Body className="p-1 bg-opacity-10 bg-success d-flex gap-2 align-items-center d-flex justify-content-between">
-              <div className="d-flex gap-4">
-                <Card.Title>{message?.dateNow}</Card.Title>
-                <Card.Title>{message?.senderName}</Card.Title>
-              </div>
-              <Card.Text>{message?.text}</Card.Text>
-              <div className="d-flex gap-2 align-items-center ">
-                <Button
-                  className=" h-50 d-flex align-items-center "
-                  variant="primary"
-                >
-                  Accept
-                </Button>
-                <Button
-                  className="h-50 d-flex align-items-center "
-                  variant="primary"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className="h-50 d-flex align-items-center "
-                  variant="primary"
-                >
-                  Edit
-                </Button>
-                <Button
-                  className="h-50 d-flex align-items-center "
-                  variant="primary"
-                >
-                  Delete
-                </Button>
-              </div>
-            </Card.Body>
-          </Card>
-        </div>
-      ))}
       {tasks.map(({ createdDate, task, displayName, id }: any) => (
         <div className="m-auto mb-3" key={id}>
           <Card
-            role="button"
-            className="rounded-start rounded-end  overflow-hidden bg-success shadow  "
+            style={backBCAfterTime(createdDate.toDate())}
+            className={`rounded-start rounded-end  overflow-hidden  shadow`}
           >
-            <Card.Body className="p-1 bg-opacity-10 bg-success d-flex gap-2 align-items-center d-flex justify-content-between">
+            <Card.Body
+              style={backBCAfterTime(createdDate.toDate())}
+              className={`p-1 bg-opacity-10  d-flex gap-2 align-items-center d-flex justify-content-between`}
+            >
               <div className="">
                 <Card.Title>{displayName}</Card.Title>
-                <Card.Text>
+                <Card.Text className="fst-italic">
                   {new Date(createdDate.seconds * 1000)
                     .toLocaleString()
                     .slice(0, 10)}
                   {moment(createdDate.toDate()).toString().slice(15, 21)}
                 </Card.Text>
               </div>
-              <Card.Text>{task}</Card.Text>
+              <Card.Text className="fw-semibold">{task}</Card.Text>
               <div className="d-flex gap-2 align-items-center ">
                 <Button
                   className=" h-50 d-flex align-items-center "
@@ -153,27 +128,34 @@ export const Tasks = () => {
                 >
                   Cancel
                 </Button>
-                <Button
-                  className="h-50 d-flex align-items-center "
-                  variant="primary"
-                  onClick={() => {
-                    setTaskId(id);
-                    setShowEdit(true);
-                    setEditedTask(task);
-                  }}
-                >
-                  Edit
-                </Button>
-                <Button
-                  onClick={() => {
-                    setTaskId(id);
-                    setShow(true);
-                  }}
-                  className="h-50 d-flex align-items-center "
-                  variant="primary"
-                >
-                  Delete
-                </Button>
+                {currentUser.displayName === displayName ? (
+                  <>
+                    {" "}
+                    <Button
+                      className="h-50 d-flex align-items-center "
+                      variant="primary"
+                      onClick={() => {
+                        setTaskId(id);
+                        setShowEdit(true);
+                        setEditedTask(task);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setTaskId(id);
+                        setShow(true);
+                      }}
+                      className="h-50 d-flex align-items-center "
+                      variant="primary"
+                    >
+                      Delete
+                    </Button>
+                  </>
+                ) : (
+                  ""
+                )}
               </div>
             </Card.Body>
           </Card>
