@@ -7,6 +7,7 @@ import {
   // getDoc,
   getDocs,
   query,
+  serverTimestamp,
   // serverTimestamp,
   // setDoc,
   // updateDoc,
@@ -30,7 +31,7 @@ export const Message = () => {
 
   // const { user } = data;
 
-  const heandleSearch = async (userName: string) => {
+  const handleSearch = async (userName: string) => {
     const q = query(collection(db, "users"), where("name", "==", userName));
 
     try {
@@ -73,7 +74,7 @@ export const Message = () => {
   //     const res = await getDoc(doc(db, "chats", combinedId));
 
   //     if (!res.exists()) {
-  //       //create a chat in chat colection
+  //       //create a chat in chat collection
   //       await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
   //       // create users chat
@@ -107,7 +108,7 @@ export const Message = () => {
           task,
           uid: currentUser.uid,
           displayName: currentUser.displayName,
-          dateNow: Date.now(),
+          createdDate: serverTimestamp(),
         });
       }
 
@@ -150,7 +151,7 @@ export const Message = () => {
 
   // debugger;
   const handleKeyDown = (e: any) => {
-    e.code === "Enter" && heandleSearch(e.target.value);
+    e.code === "Enter" && handleSearch(e.target.value);
   };
 
   return (

@@ -6,6 +6,7 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
@@ -39,12 +40,12 @@ export const Tasks = () => {
 
   useEffect(() => {
     console.log("data.chatId", data.chatId);
-    const unsub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
+    const getMessages = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
       doc.exists() && setMessages(doc.data().messages);
     });
 
     return () => {
-      unsub();
+      getMessages();
     };
   }, [data.chatId]);
 
@@ -122,16 +123,21 @@ export const Tasks = () => {
           </Card>
         </div>
       ))}
-      {tasks.map(({ dateNow, task, displayName, id }: any) => (
+      {tasks.map(({ createdDate, task, displayName, id }: any) => (
         <div className="m-auto mb-3" key={id}>
           <Card
             role="button"
             className="rounded-start rounded-end  overflow-hidden bg-success shadow  "
           >
             <Card.Body className="p-1 bg-opacity-10 bg-success d-flex gap-2 align-items-center d-flex justify-content-between">
-              <div className="d-flex gap-4">
-                <Card.Title>{dateNow}</Card.Title>
+              <div className="">
                 <Card.Title>{displayName}</Card.Title>
+                <Card.Text>
+                  {new Date(createdDate.seconds * 1000)
+                    .toLocaleString()
+                    .slice(0, 10)}
+                  {moment(createdDate.toDate()).toString().slice(15, 21)}
+                </Card.Text>
               </div>
               <Card.Text>{task}</Card.Text>
               <div className="d-flex gap-2 align-items-center ">
