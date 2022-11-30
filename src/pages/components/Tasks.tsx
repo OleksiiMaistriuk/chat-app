@@ -3,7 +3,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
@@ -32,29 +31,43 @@ export const Tasks = () => {
   const collectionRef = collection(db, "tasks");
 
   useEffect(() => {
-    const getTasks = async () => {
-      await getDocs(collectionRef).then((task) => {
-        let tasksData = task.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-        setTasks(tasksData);
-      });
-    };
-    getTasks();
+    try {
+      const getTasks = async () => {
+        const unsub = await onSnapshot(collectionRef, (task) => {
+          let tasksData = task.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setTasks(tasksData);
+        });
+
+        return () => {
+          unsub();
+        };
+      };
+      getTasks();
+    } catch (error) {
+      console.log(error);
+    }
+    // const getTasks = async () => {
+    //   await getDocs(collectionRef).then((task) => {
+    //     let tasksData = task.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    //     setTasks(tasksData);
+    //   });
+    // };
+    // getTasks();
   }, []);
 
-  useEffect(() => {
-    console.log("data.chatId", data.chatId);
-    const getMessages = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
-      doc.exists() && setMessages(doc.data().messages);
-    });
+  // useEffect(() => {
+  //   console.log("data.chatId", data.chatId);
+  //   const getMessages = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
+  //     doc.exists() && setMessages(doc.data().messages);
+  //   });
 
-    return () => {
-      getMessages();
-    };
-  }, [data.chatId]);
-
-  useEffect(() => {
-    console.log("tasks", tasks);
-  }, [tasks]);
+  //   return () => {
+  //     getMessages();
+  //   };
+  // }, [data.chatId]);
 
   const handleDeleteTask = async (e: any) => {
     e.preventDefault();
@@ -63,8 +76,6 @@ export const Tasks = () => {
       await deleteDoc(doc(db, "tasks", taskId));
       setShow(false);
       setTaskId("");
-
-      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -77,14 +88,13 @@ export const Tasks = () => {
       await updateDoc(doc(db, "tasks", taskId), { task: event });
       setShowEdit(false);
       setTaskId("");
-      window.location.reload();
     } catch (error) {
       console.log(error);
     }
   };
-  const backBCAfterTime = (createdDate: any) => {
+  const changeBGcolorAfterTime = (createdDate: any) => {
     const date = new Date();
-    const FIVE_MIN = 5 * 60 * 1000;
+    const FIVE_MIN = 10 * 60 * 1000;
 
     if (date.getTime() - new Date(createdDate).getTime() > FIVE_MIN) {
       return { backgroundColor: "#cc2c27" };
@@ -98,11 +108,11 @@ export const Tasks = () => {
       {tasks.map(({ createdDate, task, displayName, id }: any) => (
         <div className="m-auto mb-3" key={id}>
           <Card
-            style={backBCAfterTime(createdDate.toDate())}
+            style={changeBGcolorAfterTime(createdDate.toDate())}
             className={`rounded-start rounded-end  overflow-hidden  shadow`}
           >
             <Card.Body
-              style={backBCAfterTime(createdDate.toDate())}
+              style={changeBGcolorAfterTime(createdDate.toDate())}
               className={`p-1 bg-opacity-10  d-flex gap-2 align-items-center d-flex justify-content-between`}
             >
               <div className="">
