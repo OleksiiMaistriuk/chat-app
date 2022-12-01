@@ -1,6 +1,6 @@
 type Props = {};
 
-export default function NotFounPage({}: Props) {
+export default function NotFoundPage({}: Props) {
   return (
     <div className="page-wrap d-flex flex-row align-items-center">
       <div className="container">

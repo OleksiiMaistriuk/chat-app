@@ -32,14 +32,14 @@ export const Home = () => {
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                eventKey="complited"
-                to={"/complited"}
+                eventKey="completed"
+                to={"/completed"}
                 className={`${
-                  active === "complited" ? "bg-dark" : ""
+                  active === "completed" ? "bg-dark" : ""
                 } text-white bg-opacity-25 rounded-start rounded-end `}
                 style={{ border: "none" }}
               >
-                Complited
+                Completed
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>

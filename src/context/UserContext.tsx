@@ -11,7 +11,7 @@ export const UserContextProvider = ({ children }: any) => {
     user: {},
   };
 
-  const chatReduser = (
+  const chatReducer = (
     state: any,
     action: { type: any; payload: any }
   ): any => {
@@ -28,7 +28,7 @@ export const UserContextProvider = ({ children }: any) => {
         return state;
     }
   };
-  const [state, dispatch] = useReducer(chatReduser, INITIAL_STATE);
+  const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE);
   return (
     <>
       <UserContext.Provider value={{ data: state, dispatch }}>

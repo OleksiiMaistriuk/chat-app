@@ -1,8 +1,8 @@
-import { Complited } from "pages/components/Complited";
+import { Completed } from "pages/components/Completed";
 import { Message } from "pages/components/Message";
 import { Tasks } from "pages/components/Tasks";
 import { Home } from "pages/Home";
-import NotFounPage from "pages/NotFounPage";
+import NotFoundPage from "pages/NotFoundPage";
 import { Container } from "react-bootstrap";
 import { Route, Routes } from "react-router";
 // import { Navigate } from "react-router-dom";
@@ -40,7 +40,7 @@ function App() {
           }
         >
           <Route index element={<Tasks />} />
-          <Route path="complited" element={<Complited />} />
+          <Route path="completed" element={<Completed />} />
           <Route path="new-message" element={<Message />} />
           <Route path="tasks" element={<Tasks />} />
         </Route>
@@ -48,7 +48,7 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         {/* </Route> */}
-        <Route path="*" element={<NotFounPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Container>
   );

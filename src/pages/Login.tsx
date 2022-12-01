@@ -2,7 +2,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 // type Props = {
 //   onSetIsLogin: () => void;
@@ -10,10 +10,6 @@ import { auth } from "../firebase/firebase";
 export const Login = () => {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
-  // const handleClick = (e: React.SyntheticEvent): void => {
-  //   e.preventDefault();
-  //   onSetIsLogin();
-  // };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -41,9 +37,7 @@ export const Login = () => {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
-            {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Check me out" />
-            </Form.Group> */}
+
             <Button variant="primary" type="submit">
               Login
             </Button>
@@ -51,12 +45,9 @@ export const Login = () => {
           {err && <p className="text-danger">Invalid name or password</p>}
         </Card.Body>
 
-        <Card.Footer className="text-muted">
+        {/* <Card.Footer className="text-muted">
           You don't have account? <Link to="/register"> Register</Link>
-          {/* <a href="" className="" onClick={handleClick}>
-            Register
-          </a> */}
-        </Card.Footer>
+        </Card.Footer> */}
       </Card>
     </div>
   );

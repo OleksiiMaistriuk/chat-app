@@ -1,9 +1,11 @@
 import { useAuthContext } from "context/AuthContext";
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
   onSnapshot,
+  serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import moment from "moment";
@@ -15,12 +17,14 @@ import { useUserContext } from "../../context/UserContext";
 import { db } from "../../firebase/firebase";
 
 export const Tasks = () => {
-  const [messages, setMessages] = useState<any>([]);
   const [tasks, setTasks] = useState<any>([]);
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
+
   const [taskId, setTaskId] = useState("");
   const [editedTask, setEditedTask] = useState("");
+  const [cancelValues, setCancelValues] = useState({});
 
   const navigate = useNavigate();
 
@@ -28,6 +32,7 @@ export const Tasks = () => {
   const { data } = useUserContext();
   //@ts-ignore
   const { currentUser } = useAuthContext();
+
   const collectionRef = collection(db, "tasks");
 
   useEffect(() => {
@@ -49,25 +54,7 @@ export const Tasks = () => {
     } catch (error) {
       console.log(error);
     }
-    // const getTasks = async () => {
-    //   await getDocs(collectionRef).then((task) => {
-    //     let tasksData = task.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-    //     setTasks(tasksData);
-    //   });
-    // };
-    // getTasks();
   }, []);
-
-  // useEffect(() => {
-  //   console.log("data.chatId", data.chatId);
-  //   const getMessages = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
-  //     doc.exists() && setMessages(doc.data().messages);
-  //   });
-
-  //   return () => {
-  //     getMessages();
-  //   };
-  // }, [data.chatId]);
 
   const handleDeleteTask = async (e: any) => {
     e.preventDefault();
@@ -102,42 +89,105 @@ export const Tasks = () => {
       return { backgroundColor: "#038138" };
     }
   };
+  const handleAcceptTask = async (
+    e: any,
+    { createdDate, task, displayName, id }: any
+  ) => {
+    e.preventDefault();
+    const collectionRef = collection(db, "completed-tasks");
+    try {
+      if (task) {
+        await addDoc(collectionRef, {
+          task,
+          uid: id,
+          displayName,
+          createdDate,
+          date: serverTimestamp(),
+          isDone: true,
+        });
+        await deleteDoc(doc(db, "tasks", id));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCancelTask = async (e: any) => {
+    e.preventDefault();
+
+    const collectionRef = collection(db, "completed-tasks");
+    const event = e.target.explain.value;
+    try {
+      if (cancelValues) {
+        await addDoc(collectionRef, {
+          ...cancelValues,
+          date: serverTimestamp(),
+          isDone: false,
+          explanation: event,
+        });
+        //@ts-ignore
+        await deleteDoc(doc(db, "tasks", cancelValues?.id));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
       {tasks.map(({ createdDate, task, displayName, id }: any) => (
         <div className="m-auto mb-3" key={id}>
           <Card
-            style={changeBGcolorAfterTime(createdDate.toDate())}
+            style={changeBGcolorAfterTime(createdDate?.toDate())}
             className={`rounded-start rounded-end  overflow-hidden  shadow`}
           >
             <Card.Body
-              style={changeBGcolorAfterTime(createdDate.toDate())}
+              style={changeBGcolorAfterTime(createdDate?.toDate())}
               className={`p-1 bg-opacity-10  d-flex gap-2 align-items-center d-flex justify-content-between`}
             >
               <div className="">
                 <Card.Title>{displayName}</Card.Title>
                 <Card.Text className="fst-italic">
-                  {new Date(createdDate.seconds * 1000)
+                  {new Date(createdDate?.seconds * 1000)
                     .toLocaleString()
                     .slice(0, 10)}
-                  {moment(createdDate.toDate()).toString().slice(15, 21)}
+                  {moment(createdDate?.toDate()).toString().slice(15, 21)}
                 </Card.Text>
               </div>
               <Card.Text className="fw-semibold">{task}</Card.Text>
               <div className="d-flex gap-2 align-items-center ">
-                <Button
-                  className=" h-50 d-flex align-items-center "
-                  variant="primary"
-                >
-                  Accept
-                </Button>
-                <Button
-                  className="h-50 d-flex align-items-center "
-                  variant="primary"
-                >
-                  Cancel
-                </Button>
+                {currentUser.displayName !== displayName ? (
+                  <>
+                    <Button
+                      className=" h-50 d-flex align-items-center "
+                      variant="primary"
+                      onClick={(e) => {
+                        handleAcceptTask(e, {
+                          createdDate,
+                          task,
+                          displayName,
+                          id,
+                        });
+                        setTaskId(id);
+                      }}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      className="h-50 d-flex align-items-center "
+                      variant="primary"
+                      onClick={() => {
+                        setCancelValues({ createdDate, task, displayName, id });
+                        setTaskId(id);
+                        setShowExplanation(true);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  ""
+                )}
                 {currentUser.displayName === displayName ? (
                   <>
                     {" "}
@@ -195,6 +245,7 @@ export const Tasks = () => {
           </Modal.Footer>
         </Form>
       </Modal>
+
       <Modal
         show={showEdit}
         onHide={() => {
@@ -223,6 +274,47 @@ export const Tasks = () => {
               Close
             </Button>
             <Button type="submit" variant="primary">
+              Save
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+
+      <Modal
+        show={showExplanation}
+        onHide={() => {
+          setShowExplanation(false);
+        }}
+      >
+        <Form
+          className="p-3"
+          onSubmit={(e) => {
+            handleCancelTask(e);
+          }}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>explain</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Control
+              defaultValue={editedTask}
+              type="text"
+              placeholder="explain"
+              name="explain"
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setShowExplanation(false)}
+            >
+              Close
+            </Button>
+            <Button
+              onClick={() => setShowExplanation(false)}
+              type="submit"
+              variant="primary"
+            >
               Save
             </Button>
           </Modal.Footer>
