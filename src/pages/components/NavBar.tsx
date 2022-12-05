@@ -5,11 +5,10 @@ import { auth } from "../../firebase/firebase";
 import { AuthContext } from "./../../context/AuthContext";
 
 export const NavBar = () => {
-  // @ts-ignore
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useContext(AuthContext);
   return (
     <div className="d-flex align-items-center">
-      <p className="me-3 h4 text-light">{currentUser.displayName}</p>
+      <p className="me-3 h4 text-light">{currentUser?.displayName}</p>
       <Button
         onClick={() => signOut(auth)}
         variant="light"

@@ -9,21 +9,21 @@ import { db } from "../../firebase/firebase";
 export const Message = () => {
   const navigate = useNavigate();
   const [task, setTask] = useState("");
-  //@ts-ignore
-  const { currentUser } = useAuthContext();
+
+  const currentUser = useAuthContext();
 
   //@ts-ignore
-  const { dispatch, data } = useUserContext();
+  const { data } = useUserContext();
 
-  const handleSendTask = async (e: any) => {
+  const handleSendTask = async (e: React.FormEvent) => {
     e.preventDefault();
     const collectionRef = collection(db, "tasks");
     try {
       if (task) {
         await addDoc(collectionRef, {
           task,
-          uid: currentUser.uid,
-          displayName: currentUser.displayName,
+          uid: currentUser?.uid,
+          displayName: currentUser?.displayName,
           createdDate: serverTimestamp(),
         });
       }
@@ -37,7 +37,7 @@ export const Message = () => {
 
   return (
     <div className="m-auto">
-      <Form onSubmit={(e: any) => handleSendTask(e)}>
+      <Form onSubmit={(e) => handleSendTask(e)}>
         {data.user.name && <span>{data.user.name}</span>}
         <Form.Group className="mb-3" controlId="task">
           <Form.Label>Enter task</Form.Label>

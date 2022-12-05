@@ -6,80 +6,56 @@ import {
   doc,
   onSnapshot,
   serverTimestamp,
-  updateDoc,
+  Timestamp,
 } from "firebase/firestore";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../../context/UserContext";
 import { db } from "../../firebase/firebase";
+import {
+  DeleteFirebaseDoc,
+  EditFirebaseDoc,
+} from "../../firebase/FirebaseDocsEditor";
 
+interface Task {
+  createdDate: Timestamp;
+  task: string;
+  displayName: string;
+  id: string;
+}
 export const Tasks = () => {
   const [tasks, setTasks] = useState<any>([]);
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
-
   const [taskId, setTaskId] = useState("");
   const [editedTask, setEditedTask] = useState("");
-  const [cancelValues, setCancelValues] = useState({});
+  const [cancelValues, setCancelValues] = useState<Task | null>(null);
 
-  const navigate = useNavigate();
-
-  //@ts-ignore
-  const { data } = useUserContext();
-  //@ts-ignore
-  const { currentUser } = useAuthContext();
+  const currentUser = useAuthContext();
 
   const collectionRef = collection(db, "tasks");
 
   useEffect(() => {
     try {
-      const getTasks = async () => {
-        const unsub = await onSnapshot(collectionRef, (task) => {
-          let tasksData = task.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }));
-          setTasks(tasksData);
-        });
-
-        return () => {
-          unsub();
-        };
-      };
       getTasks();
     } catch (error) {
       console.log(error);
     }
   }, []);
 
-  const handleDeleteTask = async (e: any) => {
-    e.preventDefault();
-
-    try {
-      await deleteDoc(doc(db, "tasks", taskId));
-      setShow(false);
-      setTaskId("");
-    } catch (error) {
-      console.log(error);
-    }
+  const getTasks = async () => {
+    await onSnapshot(collectionRef, (task) => {
+      let tasksData = task.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setTasks(tasksData);
+    });
   };
-  const handleEditTask = async (e: any) => {
-    e.preventDefault();
-    const event = e.target.editTask.value;
 
-    try {
-      await updateDoc(doc(db, "tasks", taskId), { task: event });
-      setShowEdit(false);
-      setTaskId("");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const changeBGcolorAfterTime = (createdDate: any) => {
+  const changeBGcolorAfterTime = (createdDate: Date) => {
     const date = new Date();
     const FIVE_MIN = 10 * 60 * 1000;
 
@@ -89,6 +65,7 @@ export const Tasks = () => {
       return { backgroundColor: "#038138" };
     }
   };
+
   const handleAcceptTask = async (
     e: any,
     { createdDate, task, displayName, id }: any
@@ -114,7 +91,6 @@ export const Tasks = () => {
 
   const handleCancelTask = async (e: any) => {
     e.preventDefault();
-
     const collectionRef = collection(db, "completed-tasks");
     const event = e.target.explain.value;
     try {
@@ -125,8 +101,8 @@ export const Tasks = () => {
           isDone: false,
           explanation: event,
         });
-        //@ts-ignore
-        await deleteDoc(doc(db, "tasks", cancelValues?.id));
+
+        await deleteDoc(doc(db, "tasks", cancelValues.id));
       }
     } catch (error) {
       console.log(error);
@@ -135,7 +111,7 @@ export const Tasks = () => {
 
   return (
     <>
-      {tasks.map(({ createdDate, task, displayName, id }: any) => (
+      {tasks.map(({ createdDate, task, displayName, id }: Task) => (
         <div className="m-auto mb-3" key={id}>
           <Card
             style={changeBGcolorAfterTime(createdDate?.toDate())}
@@ -156,7 +132,7 @@ export const Tasks = () => {
               </div>
               <Card.Text className="fw-semibold">{task}</Card.Text>
               <div className="d-flex gap-2 align-items-center ">
-                {currentUser.displayName !== displayName ? (
+                {currentUser?.displayName === "magazyn" ? (
                   <>
                     <Button
                       className=" h-50 d-flex align-items-center "
@@ -188,7 +164,7 @@ export const Tasks = () => {
                 ) : (
                   ""
                 )}
-                {currentUser.displayName === displayName ? (
+                {currentUser?.displayName === displayName ? (
                   <>
                     {" "}
                     <Button
@@ -237,7 +213,9 @@ export const Tasks = () => {
               type="submit"
               variant="primary"
               onClick={(e) => {
-                handleDeleteTask(e);
+                DeleteFirebaseDoc(e, "tasks", taskId);
+                setShow(false);
+                setTaskId("");
               }}
             >
               Delete
@@ -255,7 +233,9 @@ export const Tasks = () => {
         <Form
           className="p-3"
           onSubmit={(e) => {
-            handleEditTask(e);
+            EditFirebaseDoc(e, "tasks", taskId);
+            setShowEdit(false);
+            setTaskId("");
           }}
         >
           <Modal.Header closeButton>

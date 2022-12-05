@@ -13,13 +13,10 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useAuthContext } from "./context/AuthContext";
 import { Login } from "./pages/Login";
 function App() {
-  //@ts-ignore
-  const { currentUser } = useAuthContext();
+  const currentUser = useAuthContext();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // !currentUser ? navigate("/auth") : navigate("/");
-  }, [currentUser, navigate]);
+  useEffect(() => {}, [currentUser, navigate]);
 
   const ProtectedRoute = ({ children }: any) => {
     if (!currentUser) {

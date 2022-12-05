@@ -2,13 +2,15 @@ import { createContext, useContext, useReducer } from "react";
 import { useAuthContext } from "./AuthContext";
 
 export const UserContext = createContext({});
-
-export const UserContextProvider = ({ children }: any) => {
-  // @ts-ignore
-  const { currentUser } = useAuthContext();
+type UserProps = {
+  children: React.ReactNode;
+};
+export const UserContextProvider = ({ children }: UserProps) => {
+  const currentUser = useAuthContext();
   const INITIAL_STATE = {
     chatId: "null",
     user: {},
+    collection: {},
   };
 
   const chatReducer = (
@@ -20,9 +22,13 @@ export const UserContextProvider = ({ children }: any) => {
         return {
           user: action.payload,
           chatId:
-            currentUser.uid > action.payload.uid
-              ? currentUser.uid + action.payload.uid
-              : action.payload.uid + currentUser.uid,
+            !currentUser?.uid > action.payload.uid
+              ? currentUser?.uid + action.payload.uid
+              : action.payload.uid + currentUser?.uid,
+        };
+      case "SET_COLLECTION":
+        return {
+          collection: action.payload,
         };
       default:
         return state;
