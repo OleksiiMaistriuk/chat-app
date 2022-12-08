@@ -5,6 +5,8 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  orderBy,
+  query,
   serverTimestamp,
 } from "firebase/firestore";
 import moment from "moment";
@@ -29,6 +31,7 @@ export const Tasks = () => {
   const currentUser = useAuthContext();
 
   const collectionRef = collection(db, "tasks");
+  const q = query(collectionRef, orderBy("createdDate"));
 
   useEffect(() => {
     try {
@@ -39,7 +42,7 @@ export const Tasks = () => {
   }, []);
 
   const getTasks = async () => {
-    await onSnapshot(collectionRef, (task) => {
+    await onSnapshot(q, (task) => {
       let tasksData = task.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -84,10 +87,13 @@ export const Tasks = () => {
 
   const handleCancelTask = async (e) => {
     e.preventDefault();
+
     const collectionRef = collection(db, "completed-tasks");
+
     const event = e.target.explain.value;
+
     try {
-      if (cancelValues) {
+      if (cancelValues && event) {
         await addDoc(collectionRef, {
           ...cancelValues,
           date: serverTimestamp(),

@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Card, Pagination } from "react-bootstrap";
@@ -9,6 +9,7 @@ export const Completed = () => {
   const [postsPerPage] = useState(10);
 
   const collectionRef = collection(db, "completed-tasks");
+  const q = query(collectionRef, orderBy("date"));
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -17,6 +18,7 @@ export const Completed = () => {
     indexOfLastPost
   );
   const pageNumbers = [];
+  completedTasks.reverse();
 
   for (let i = 1; i <= Math.ceil(completedTasks.length / postsPerPage); i++) {
     pageNumbers.push(i);
@@ -25,7 +27,7 @@ export const Completed = () => {
   useEffect(() => {
     try {
       const getTasks = async () => {
-        const unsub = await onSnapshot(collectionRef, (task) => {
+        const unsub = await onSnapshot(q, (task) => {
           let tasksData = task.docs.map((doc) => ({
             ...doc.data(),
             id: doc.id,
