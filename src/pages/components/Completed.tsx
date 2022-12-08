@@ -1,12 +1,26 @@
 import { collection, onSnapshot } from "firebase/firestore";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { Card } from "react-bootstrap";
+import { Card, Pagination } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
 export const Completed = () => {
   const [completedTasks, setCompletedTasks] = useState<any>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [postsPerPage] = useState<number>(5);
 
   const collectionRef = collection(db, "completed-tasks");
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentCompletedTasks = completedTasks.slice(
+    indexOfFirstPost,
+    indexOfLastPost
+  );
+  const pageNumbers = [];
+
+  for (let i = 1; i <= Math.ceil(completedTasks.length / postsPerPage); i++) {
+    pageNumbers.push(i);
+  }
 
   useEffect(() => {
     try {
@@ -31,7 +45,7 @@ export const Completed = () => {
 
   return (
     <div className="m-auto ">
-      {completedTasks.map(
+      {currentCompletedTasks.map(
         ({
           date,
           createdDate,
@@ -77,6 +91,49 @@ export const Completed = () => {
           </div>
         )
       )}
+      <Pagination>
+        <Pagination.First
+          disabled={currentPage === 1 ? true : false}
+          onClick={() => {
+            setCurrentPage(1);
+          }}
+        />
+        <Pagination.Prev
+          disabled={currentPage === 1 ? true : false}
+          onClick={() => {
+            setCurrentPage(currentPage - 1);
+          }}
+        />
+
+        {/* <Pagination.Ellipsis /> */}
+        {pageNumbers.map((number, index) => (
+          <Pagination.Item
+            key={index}
+            active={number === currentPage}
+            onClick={() => {
+              setCurrentPage(number);
+            }}
+          >
+            {number}
+          </Pagination.Item>
+        ))}
+
+        <Pagination.Next
+          disabled={
+            currentPage === Math.ceil(completedTasks.length / postsPerPage)
+              ? true
+              : false
+          }
+          onClick={() => {
+            setCurrentPage(currentPage + 1);
+          }}
+        />
+        <Pagination.Last
+          onClick={() => {
+            setCurrentPage(Math.ceil(completedTasks.length / postsPerPage));
+          }}
+        />
+      </Pagination>
     </div>
   );
 };
