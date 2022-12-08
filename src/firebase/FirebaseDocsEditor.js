@@ -1,14 +1,10 @@
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
-export const EditFirebaseDoc = async (
-  e: any,
-  collectionName: string,
-  docId: string
-) => {
+export const EditFirebaseDoc = async (e, collectionName, docId) => {
   e.preventDefault();
   const event = e.target.editTask.value;
-  console.log(collectionName);
+
   try {
     await updateDoc(doc(db, collectionName, docId), { task: event });
   } catch (error) {
@@ -16,11 +12,7 @@ export const EditFirebaseDoc = async (
   }
 };
 
-export const DeleteFirebaseDoc = async (
-  e: any,
-  docId: string,
-  collectionName: string
-) => {
+export const DeleteFirebaseDoc = async (e, docId, collectionName) => {
   e.preventDefault();
 
   try {

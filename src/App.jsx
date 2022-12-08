@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {}, [currentUser, navigate]);
 
-  const ProtectedRoute = ({ children }: any) => {
+  const ProtectedRoute = ({ children }) => {
     if (!currentUser) {
       return <Navigate to="/login" replace />;
     }

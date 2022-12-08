@@ -1,5 +1,5 @@
 import { useAuthContext } from "context/AuthContext";
-import { useUserContext } from "context/UserContext";
+import { useUserContext } from "context/UserContextj";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
@@ -12,10 +12,9 @@ export const Message = () => {
 
   const currentUser = useAuthContext();
 
-  //@ts-ignore
   const { data } = useUserContext();
 
-  const handleSendTask = async (e: React.FormEvent) => {
+  const handleSendTask = async (e) => {
     e.preventDefault();
     const collectionRef = collection(db, "tasks");
     try {

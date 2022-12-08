@@ -1,8 +1,8 @@
 import { signOut } from "firebase/auth";
 import { useContext } from "react";
 import { Button } from "react-bootstrap";
+import { AuthContext } from "../../context/AuthContext";
 import { auth } from "../../firebase/firebase";
-import { AuthContext } from "./../../context/AuthContext";
 
 export const NavBar = () => {
   const currentUser = useContext(AuthContext);

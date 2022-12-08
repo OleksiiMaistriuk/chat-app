@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { Card, Pagination } from "react-bootstrap";
 import { db } from "../../firebase/firebase";
 export const Completed = () => {
-  const [completedTasks, setCompletedTasks] = useState<any>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [postsPerPage] = useState<number>(5);
+  const [completedTasks, setCompletedTasks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(10);
 
   const collectionRef = collection(db, "completed-tasks");
 
@@ -46,15 +46,7 @@ export const Completed = () => {
   return (
     <div className="m-auto ">
       {currentCompletedTasks.map(
-        ({
-          date,
-          createdDate,
-          task,
-          displayName,
-          id,
-          explanation,
-          isDone,
-        }: any) => (
+        ({ date, createdDate, task, displayName, id, explanation, isDone }) => (
           <div className="m-auto mb-3" key={id}>
             <Card
               className={`rounded-start ${
@@ -91,49 +83,51 @@ export const Completed = () => {
           </div>
         )
       )}
-      <Pagination>
-        <Pagination.First
-          disabled={currentPage === 1 ? true : false}
-          onClick={() => {
-            setCurrentPage(1);
-          }}
-        />
-        <Pagination.Prev
-          disabled={currentPage === 1 ? true : false}
-          onClick={() => {
-            setCurrentPage(currentPage - 1);
-          }}
-        />
-
-        {/* <Pagination.Ellipsis /> */}
-        {pageNumbers.map((number, index) => (
-          <Pagination.Item
-            key={index}
-            active={number === currentPage}
+      <div className=" d-flex justify-content-center">
+        <Pagination>
+          <Pagination.First
+            disabled={currentPage === 1 ? true : false}
             onClick={() => {
-              setCurrentPage(number);
+              setCurrentPage(1);
             }}
-          >
-            {number}
-          </Pagination.Item>
-        ))}
+          />
+          <Pagination.Prev
+            disabled={currentPage === 1 ? true : false}
+            onClick={() => {
+              setCurrentPage(currentPage - 1);
+            }}
+          />
 
-        <Pagination.Next
-          disabled={
-            currentPage === Math.ceil(completedTasks.length / postsPerPage)
-              ? true
-              : false
-          }
-          onClick={() => {
-            setCurrentPage(currentPage + 1);
-          }}
-        />
-        <Pagination.Last
-          onClick={() => {
-            setCurrentPage(Math.ceil(completedTasks.length / postsPerPage));
-          }}
-        />
-      </Pagination>
+          {/* <Pagination.Ellipsis /> */}
+          {pageNumbers.map((number, index) => (
+            <Pagination.Item
+              key={index}
+              active={number === currentPage}
+              onClick={() => {
+                setCurrentPage(number);
+              }}
+            >
+              {number}
+            </Pagination.Item>
+          ))}
+
+          <Pagination.Next
+            disabled={
+              currentPage === Math.ceil(completedTasks.length / postsPerPage)
+                ? true
+                : false
+            }
+            onClick={() => {
+              setCurrentPage(currentPage + 1);
+            }}
+          />
+          <Pagination.Last
+            onClick={() => {
+              setCurrentPage(Math.ceil(completedTasks.length / postsPerPage));
+            }}
+          />
+        </Pagination>
+      </div>
     </div>
   );
 };

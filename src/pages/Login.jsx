@@ -4,14 +4,12 @@ import { Card, Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase";
-// type Props = {
-//   onSetIsLogin: () => void;
-// };
+
 export const Login = () => {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target[0].value + "@mail.com";
     const password = e.target[1].value;
@@ -23,6 +21,7 @@ export const Login = () => {
       setErr(true);
     }
   };
+
   return (
     <div className="m-auto " style={{ maxWidth: "500px" }}>
       <Card className="flex">
@@ -44,10 +43,6 @@ export const Login = () => {
           </Form>
           {err && <p className="text-danger">Invalid name or password</p>}
         </Card.Body>
-
-        {/* <Card.Footer className="text-muted">
-          You don't have account? <Link to="/register"> Register</Link>
-        </Card.Footer> */}
       </Card>
     </div>
   );

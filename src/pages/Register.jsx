@@ -14,7 +14,7 @@ export const Register = () => {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target[0].value + "@mail.com";
     const displayName = e.target[0].value;

@@ -6,7 +6,6 @@ import {
   doc,
   onSnapshot,
   serverTimestamp,
-  Timestamp,
 } from "firebase/firestore";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -18,20 +17,14 @@ import {
   EditFirebaseDoc,
 } from "../../firebase/FirebaseDocsEditor";
 
-interface Task {
-  createdDate: Timestamp;
-  task: string;
-  displayName: string;
-  id: string;
-}
 export const Tasks = () => {
-  const [tasks, setTasks] = useState<any>([]);
+  const [tasks, setTasks] = useState([]);
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
   const [taskId, setTaskId] = useState("");
   const [editedTask, setEditedTask] = useState("");
-  const [cancelValues, setCancelValues] = useState<Task | null>(null);
+  const [cancelValues, setCancelValues] = useState(null);
 
   const currentUser = useAuthContext();
 
@@ -55,7 +48,7 @@ export const Tasks = () => {
     });
   };
 
-  const changeBGcolorAfterTime = (createdDate: Date) => {
+  const changeBGcolorAfterTime = (createdDate) => {
     const date = new Date();
     const FIVE_MIN = 10 * 60 * 1000;
 
@@ -67,8 +60,8 @@ export const Tasks = () => {
   };
 
   const handleAcceptTask = async (
-    e: any,
-    { createdDate, task, displayName, id }: any
+    e,
+    { createdDate, task, displayName, id }
   ) => {
     e.preventDefault();
     const collectionRef = collection(db, "completed-tasks");
@@ -89,7 +82,7 @@ export const Tasks = () => {
     }
   };
 
-  const handleCancelTask = async (e: any) => {
+  const handleCancelTask = async (e) => {
     e.preventDefault();
     const collectionRef = collection(db, "completed-tasks");
     const event = e.target.explain.value;
@@ -111,7 +104,7 @@ export const Tasks = () => {
 
   return (
     <>
-      {tasks.map(({ createdDate, task, displayName, id }: Task) => (
+      {tasks.map(({ createdDate, task, displayName, id }) => (
         <div className="m-auto mb-3" key={id}>
           <Card
             style={changeBGcolorAfterTime(createdDate?.toDate())}
