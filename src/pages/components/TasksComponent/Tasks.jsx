@@ -4,51 +4,50 @@ import {
   collection,
   deleteDoc,
   doc,
-  onSnapshot,
-  orderBy,
-  query,
   serverTimestamp,
 } from "firebase/firestore";
-import moment from "moment";
-import { useEffect, useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
-import Modal from "react-bootstrap/Modal";
-import { db } from "../../firebase/firebase";
+import firebaseService from "firebaseService";
 import {
   DeleteFirebaseDoc,
   EditFirebaseDoc,
-} from "../../firebase/FirebaseDocsEditor";
+} from "firebaseService/firebaseDocsEditor";
+import moment from "moment";
+import { useState } from "react";
+import { Button, Card, Form, Modal } from "react-bootstrap";
 
-export const Tasks = () => {
-  const [tasks, setTasks] = useState([]);
+export const Tasks = ({ tasks }) => {
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
-  const [taskId, setTaskId] = useState("");
+
   const [editedTask, setEditedTask] = useState("");
   const [cancelValues, setCancelValues] = useState(null);
 
+  const [taskId, setTaskId] = useState("");
+
   const currentUser = useAuthContext();
 
-  const collectionRef = collection(db, "tasks");
-  const q = query(collectionRef, orderBy("createdDate"));
-
-  useEffect(() => {
+  const handleAcceptTask = async (
+    e,
+    { createdDate, task, displayName, id }
+  ) => {
+    e.preventDefault();
+    const collectionRef = collection(firebaseService.db, "completed-tasks");
     try {
-      getTasks();
+      if (task) {
+        await addDoc(collectionRef, {
+          task,
+          uid: id,
+          displayName,
+          createdDate,
+          date: serverTimestamp(),
+          isDone: true,
+        });
+        await deleteDoc(doc(firebaseService.db, "tasks", id));
+      }
     } catch (error) {
       console.log(error);
     }
-  }, []);
-
-  const getTasks = async () => {
-    await onSnapshot(q, (task) => {
-      let tasksData = task.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setTasks(tasksData);
-    });
   };
 
   const changeBGcolorAfterTime = (createdDate) => {
@@ -61,34 +60,10 @@ export const Tasks = () => {
       return { backgroundColor: "#038138" };
     }
   };
-
-  const handleAcceptTask = async (
-    e,
-    { createdDate, task, displayName, id }
-  ) => {
-    e.preventDefault();
-    const collectionRef = collection(db, "completed-tasks");
-    try {
-      if (task) {
-        await addDoc(collectionRef, {
-          task,
-          uid: id,
-          displayName,
-          createdDate,
-          date: serverTimestamp(),
-          isDone: true,
-        });
-        await deleteDoc(doc(db, "tasks", id));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleCancelTask = async (e) => {
     e.preventDefault();
 
-    const collectionRef = collection(db, "completed-tasks");
+    const collectionRef = collection(firebaseService.db, "completed-tasks");
 
     const event = e.target.explain.value;
 
@@ -101,7 +76,7 @@ export const Tasks = () => {
           explanation: event,
         });
 
-        await deleteDoc(doc(db, "tasks", cancelValues.id));
+        await deleteDoc(doc(firebaseService.db, "tasks", cancelValues.id));
       }
     } catch (error) {
       console.log(error);
@@ -110,6 +85,7 @@ export const Tasks = () => {
 
   return (
     <>
+      {" "}
       {tasks.map(({ createdDate, task, displayName, id }) => (
         <div className="m-auto mb-3" key={id}>
           <Card
@@ -196,7 +172,6 @@ export const Tasks = () => {
           </Card>
         </div>
       ))}
-
       <Modal show={show} onHide={() => setShow(false)}>
         {" "}
         <Form className="p-3">
@@ -222,7 +197,6 @@ export const Tasks = () => {
           </Modal.Footer>
         </Form>
       </Modal>
-
       <Modal
         show={showEdit}
         onHide={() => {
@@ -258,7 +232,6 @@ export const Tasks = () => {
           </Modal.Footer>
         </Form>
       </Modal>
-
       <Modal
         show={showExplanation}
         onHide={() => {

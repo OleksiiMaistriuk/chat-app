@@ -1,9 +1,10 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import firebaseService from "../firebaseService";
+
 import { Card, Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebase";
 
 export const Login = () => {
   const [err, setErr] = useState(false);
@@ -15,7 +16,7 @@ export const Login = () => {
     const password = e.target[1].value;
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(firebaseService.auth, email, password);
       navigate("/");
     } catch (error) {
       setErr(true);

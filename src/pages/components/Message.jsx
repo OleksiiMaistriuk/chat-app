@@ -4,7 +4,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { db } from "../../firebase/firebase";
+import firebaseService from "firebaseService";
 
 export const Message = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export const Message = () => {
 
   const handleSendTask = async (e) => {
     e.preventDefault();
-    const collectionRef = collection(db, "tasks");
+    const collectionRef = collection(firebaseService.db, "tasks");
     try {
       if (task) {
         await addDoc(collectionRef, {

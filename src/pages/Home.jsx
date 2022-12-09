@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Card, Nav } from "react-bootstrap";
 import { Link, Outlet } from "react-router-dom";
+
+import { Card, Nav } from "react-bootstrap";
 import { NavBar } from "./components/NavBar";
+
 export const Home = () => {
   const [active, setActive] = useState("default");
 

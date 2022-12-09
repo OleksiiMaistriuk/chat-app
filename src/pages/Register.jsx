@@ -4,12 +4,12 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import firebaseService from "firebaseService";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 import { Card, Form } from "react-bootstrap";
 import Button from "react-bootstrap/esm/Button";
-import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../firebase/firebase";
-
 export const Register = () => {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
@@ -21,19 +21,23 @@ export const Register = () => {
     const password = e.target[1].value;
 
     try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const res = await createUserWithEmailAndPassword(
+        firebaseService.auth,
+        email,
+        password
+      );
       await updateProfile(res.user, {
         displayName,
       });
 
-      await setDoc(doc(db, "users", res.user.uid), {
+      await setDoc(doc(firebaseService.db, "users", res.user.uid), {
         uid: res.user.uid,
         name: res.user.displayName,
       });
 
-      await setDoc(doc(db, "usersChats", res.user.uid), {});
+      await setDoc(doc(firebaseService.db, "usersChats", res.user.uid), {});
 
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(firebaseService.auth, email, password);
 
       navigate("/");
 

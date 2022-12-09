@@ -1,17 +1,17 @@
-import { Completed } from "pages/components/Completed";
-import { Message } from "pages/components/Message";
-import { Tasks } from "pages/components/Tasks";
-import { Home } from "pages/Home";
-import NotFoundPage from "pages/NotFoundPage";
-import { Container } from "react-bootstrap";
 import { Route, Routes } from "react-router";
-// import { Navigate } from "react-router-dom";
-import { Register } from "pages/Register";
-
 import { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuthContext } from "./context/AuthContext";
+
+import { Container } from "react-bootstrap";
+import { Message } from "pages/components/Message";
+import TasksComponent from "pages/components/TasksComponent";
+import { Home } from "pages/Home";
+import NotFoundPage from "pages/NotFoundPage";
+import { Register } from "pages/Register";
+import CompletedComponent from "./pages/components/CompletedComponent";
 import { Login } from "./pages/Login";
+
 function App() {
   const currentUser = useAuthContext();
   const navigate = useNavigate();
@@ -36,10 +36,10 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Tasks />} />
-          <Route path="completed" element={<Completed />} />
+          <Route index element={<TasksComponent />} />
+          <Route path="completed" element={<CompletedComponent />} />
           <Route path="new-message" element={<Message />} />
-          <Route path="tasks" element={<Tasks />} />
+          <Route path="tasks" element={<TasksComponent />} />
         </Route>
         {/* <Route path="/auth" element={<AuthPage />}> */}
         <Route path="register" element={<Register />} />
