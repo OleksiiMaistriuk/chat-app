@@ -30,19 +30,23 @@ export const Login = () => {
         <Card.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formBasicName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="name" placeholder="Enter name" />
+              <Form.Label>Nazwa użytkownika</Form.Label>
+              <Form.Control type="name" placeholder="Wpisz nazwę użytkownika" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
+              <Form.Label>Hasło</Form.Label>
+              <Form.Control type="password" placeholder="Wpisz hasło" />
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              Login
+              Zaloguj sie
             </Button>
           </Form>
-          {err && <p className="text-danger">Invalid name or password</p>}
+          {err && (
+            <p className="text-danger mt-2 text-center">
+              Nieprawidłowa Nazwa użytkownika lub Hasło
+            </p>
+          )}
         </Card.Body>
       </Card>
     </div>

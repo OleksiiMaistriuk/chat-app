@@ -14,7 +14,7 @@ export const NavBar = () => {
         variant="light"
         className="text-decoration-none d-flex align-items-center fs-6 text fw-bold text-muted"
       >
-        logout{" "}
+        Wyloguj
       </Button>
     </div>
   );

@@ -122,7 +122,7 @@ export const Tasks = ({ tasks }) => {
                         setTaskId(id);
                       }}
                     >
-                      Accept
+                      Zaakceptować
                     </Button>
                     <Button
                       className="h-50 d-flex align-items-center "
@@ -133,7 +133,7 @@ export const Tasks = ({ tasks }) => {
                         setShowExplanation(true);
                       }}
                     >
-                      Cancel
+                      Anulować
                     </Button>
                   </>
                 ) : (
@@ -151,7 +151,7 @@ export const Tasks = ({ tasks }) => {
                         setEditedTask(task);
                       }}
                     >
-                      Edit
+                      Edytować
                     </Button>
                     <Button
                       onClick={() => {
@@ -161,7 +161,7 @@ export const Tasks = ({ tasks }) => {
                       className="h-50 d-flex align-items-center "
                       variant="primary"
                     >
-                      Delete
+                      Usunąć
                     </Button>
                   </>
                 ) : (
@@ -176,12 +176,12 @@ export const Tasks = ({ tasks }) => {
         {" "}
         <Form className="p-3">
           <Modal.Header closeButton>
-            <Modal.Title>Delete task</Modal.Title>
+            <Modal.Title>Usuń zadanie</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Do you want to delete task?</Modal.Body>
+          <Modal.Body>Czy chcesz usunąć zadanie?</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setShow(false)}>
-              Close
+              Zamknąć
             </Button>
             <Button
               type="submit"
@@ -192,7 +192,7 @@ export const Tasks = ({ tasks }) => {
                 setTaskId("");
               }}
             >
-              Delete
+              Usunąć
             </Button>
           </Modal.Footer>
         </Form>
@@ -212,7 +212,7 @@ export const Tasks = ({ tasks }) => {
           }}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Edit task</Modal.Title>
+            <Modal.Title>Edytuj zadanie</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Control
@@ -224,10 +224,10 @@ export const Tasks = ({ tasks }) => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setShowEdit(false)}>
-              Close
+              Zamknąć
             </Button>
             <Button type="submit" variant="primary">
-              Save
+              Zapisać
             </Button>
           </Modal.Footer>
         </Form>
@@ -245,13 +245,14 @@ export const Tasks = ({ tasks }) => {
           }}
         >
           <Modal.Header closeButton>
-            <Modal.Title>explain</Modal.Title>
+            Napisz dlaczego nie możesz tego zrobić.
+            <Modal.Title></Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Control
               defaultValue={editedTask}
               type="text"
-              placeholder="explain"
+              placeholder="Wytłumaczyć"
               name="explain"
             />
           </Modal.Body>
@@ -260,14 +261,14 @@ export const Tasks = ({ tasks }) => {
               variant="secondary"
               onClick={() => setShowExplanation(false)}
             >
-              Close
+              Zamknąć
             </Button>
             <Button
               onClick={() => setShowExplanation(false)}
               type="submit"
               variant="primary"
             >
-              Save
+              Zapisać
             </Button>
           </Modal.Footer>
         </Form>

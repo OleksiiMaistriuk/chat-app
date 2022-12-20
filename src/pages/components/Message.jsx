@@ -1,10 +1,10 @@
 import { useAuthContext } from "context/AuthContext";
 import { useUserContext } from "context/UserContextj";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import firebaseService from "firebaseService";
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import firebaseService from "firebaseService";
 
 export const Message = () => {
   const navigate = useNavigate();
@@ -39,16 +39,16 @@ export const Message = () => {
       <Form onSubmit={(e) => handleSendTask(e)}>
         {data.user.name && <span>{data.user.name}</span>}
         <Form.Group className="mb-3" controlId="task">
-          <Form.Label>Enter task</Form.Label>
           <Form.Control
             value={task}
+            autoFocus
             type="text"
-            placeholder="Enter task"
+            placeholder="Wpisz zadanie"
             onChange={(e) => setTask(e.target.value)}
           />
         </Form.Group>
         <Button variant="primary" type="submit">
-          Submit
+          Wysłać
         </Button>
       </Form>
     </div>

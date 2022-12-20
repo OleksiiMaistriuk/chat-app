@@ -20,6 +20,19 @@ export const Home = () => {
           >
             <Nav.Item>
               <Nav.Link
+                eventKey="new-message"
+                as={Link}
+                to={"/new-message"}
+                className={`${
+                  active === "new-message" ? "bg-dark" : ""
+                } text-white bg-opacity-25 rounded-start rounded-end `}
+                style={{ border: "none" }}
+              >
+                Nowe zadanie
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
                 eventKey="tasks"
                 as={Link}
                 to={"/tasks"}
@@ -28,7 +41,7 @@ export const Home = () => {
                 } text-white bg-opacity-25 rounded-start rounded-end `}
                 style={{ border: "none" }}
               >
-                Tasks
+                Zadania do wykonania
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
@@ -41,20 +54,7 @@ export const Home = () => {
                 } text-white bg-opacity-25 rounded-start rounded-end `}
                 style={{ border: "none" }}
               >
-                Completed
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                eventKey="new-message"
-                as={Link}
-                to={"/new-message"}
-                className={`${
-                  active === "new-message" ? "bg-dark" : ""
-                } text-white bg-opacity-25 rounded-start rounded-end `}
-                style={{ border: "none" }}
-              >
-                New message
+                Zakończone
               </Nav.Link>
             </Nav.Item>
           </Nav>
