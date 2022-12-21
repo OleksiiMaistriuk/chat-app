@@ -1,5 +1,5 @@
 import { useAuthContext } from "context/AuthContext";
-import { useUserContext } from "context/UserContextj";
+import { useUserDocsContext } from "context/UserDocsContext";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import firebaseService from "firebaseService";
 import { useState } from "react";
@@ -11,8 +11,7 @@ export const Message = () => {
   const [task, setTask] = useState("");
 
   const currentUser = useAuthContext();
-
-  const { data } = useUserContext();
+  const currentUserDocs = useUserDocsContext();
 
   const handleSendTask = async (e) => {
     e.preventDefault();
@@ -24,6 +23,7 @@ export const Message = () => {
           uid: currentUser?.uid,
           displayName: currentUser?.displayName,
           createdDate: serverTimestamp(),
+          creatorDepartment: currentUserDocs.department,
         });
       }
 
@@ -37,7 +37,6 @@ export const Message = () => {
   return (
     <div className="m-auto">
       <Form onSubmit={(e) => handleSendTask(e)}>
-        {data.user.name && <span>{data.user.name}</span>}
         <Form.Group className="mb-3" controlId="task">
           <Form.Control
             value={task}

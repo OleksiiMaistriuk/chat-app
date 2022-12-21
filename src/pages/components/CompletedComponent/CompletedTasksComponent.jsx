@@ -1,12 +1,20 @@
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useAuthContext } from "context/AuthContext";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import firebaseService from "firebaseService";
+import { useEffect, useState } from "react";
 import { PaginatedTasks } from "./Pagination";
 
 export const CompletedComponent = () => {
   const [completedTasks, setCompletedTasks] = useState([]);
 
   const collectionRef = collection(firebaseService.db, "completed-tasks");
+
   const q = query(collectionRef, orderBy("date"));
   const getTasks = async () => {
     await onSnapshot(q, (task) => {

@@ -1,11 +1,11 @@
-import { AuthContext } from "context/AuthContext";
+import { useAuthContext } from "context/AuthContext";
 import { signOut } from "firebase/auth";
 import firebaseService from "firebaseService";
-import { useContext } from "react";
 import { Button } from "react-bootstrap";
 
 export const NavBar = () => {
-  const currentUser = useContext(AuthContext);
+  const currentUser = useAuthContext();
+
   return (
     <div className="d-flex align-items-center">
       <p className="me-3 h4 text-light">{currentUser?.displayName}</p>

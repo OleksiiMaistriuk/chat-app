@@ -1,6 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { useAuthContext } from "./AuthContext";
 
+// @ts-ignore
 export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {

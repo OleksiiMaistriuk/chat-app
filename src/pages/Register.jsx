@@ -18,8 +18,9 @@ export const Register = () => {
     e.preventDefault();
     const email = e.target[0].value + "@mail.com";
     const displayName = e.target[0].value;
-    const password = e.target[1].value;
 
+    const password = e.target[1].value;
+    const department = e.target[2].value;
     try {
       const res = await createUserWithEmailAndPassword(
         firebaseService.auth,
@@ -33,6 +34,7 @@ export const Register = () => {
       await setDoc(doc(firebaseService.db, "users", res.user.uid), {
         uid: res.user.uid,
         name: res.user.displayName,
+        department,
       });
 
       await setDoc(doc(firebaseService.db, "usersChats", res.user.uid), {});
@@ -59,6 +61,10 @@ export const Register = () => {
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" placeholder="Password" />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicRole">
+              <Form.Label>Dzial</Form.Label>
+              <Form.Control type="Dzial" placeholder="Dzial" />
             </Form.Group>
 
             <Button variant="primary" type="submit">

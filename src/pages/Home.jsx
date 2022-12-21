@@ -1,31 +1,20 @@
-import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 import { Card, Nav } from "react-bootstrap";
 import { NavBar } from "./components/NavBar";
 
 export const Home = () => {
-  const [active, setActive] = useState("default");
-
   return (
     <div className="m-auto ">
       <Card>
         <Card.Header className="bg-secondary bg-opacity-50 text-white d-flex justify-content-between ">
-          <Nav
-            activeKey={active}
-            variant="tabs"
-            defaultActiveKey="/tasks"
-            className="pb-1 gap-2"
-            onSelect={(selectedKey) => setActive(selectedKey)}
-          >
+          <Nav variant="tabs" defaultActiveKey="/tasks" className="pb-1 gap-2">
             <Nav.Item>
               <Nav.Link
                 eventKey="new-message"
-                as={Link}
+                as={NavLink}
                 to={"/new-message"}
-                className={`${
-                  active === "new-message" ? "bg-dark" : ""
-                } text-white bg-opacity-25 rounded-start rounded-end `}
+                className={` text-white bg-opacity-25 rounded-start rounded-end `}
                 style={{ border: "none" }}
               >
                 Nowe zadanie
@@ -34,11 +23,9 @@ export const Home = () => {
             <Nav.Item>
               <Nav.Link
                 eventKey="tasks"
-                as={Link}
+                as={NavLink}
                 to={"/tasks"}
-                className={`${
-                  active === "tasks" ? "bg-dark" : ""
-                } text-white bg-opacity-25 rounded-start rounded-end `}
+                className={` text-white bg-opacity-25 rounded-start rounded-end `}
                 style={{ border: "none" }}
               >
                 Zadania do wykonania
@@ -46,12 +33,10 @@ export const Home = () => {
             </Nav.Item>
             <Nav.Item>
               <Nav.Link
-                as={Link}
+                as={NavLink}
                 eventKey="completed"
                 to={"/completed"}
-                className={`${
-                  active === "completed" ? "bg-dark" : ""
-                } text-white bg-opacity-25 rounded-start rounded-end `}
+                className={` text-white bg-opacity-25 rounded-start rounded-end `}
                 style={{ border: "none" }}
               >
                 Zakończone

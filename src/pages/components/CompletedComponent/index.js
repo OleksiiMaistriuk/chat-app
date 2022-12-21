@@ -1,3 +1,3 @@
-import { CompletedComponent } from "./CompletedComponent";
+import { CompletedComponent } from "./CompletedTasksComponent";
 
 export default CompletedComponent;

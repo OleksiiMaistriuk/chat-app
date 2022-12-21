@@ -6,7 +6,18 @@ export const CurrentCompletedTasks = ({ currentCompletedTasks }) => {
     <>
       {" "}
       {currentCompletedTasks.map(
-        ({ date, createdDate, task, displayName, id, explanation, isDone }) => (
+        ({
+          date,
+          createdDate,
+          task,
+          displayName,
+          id,
+          explanation,
+          isDone,
+          currentUserName,
+          department,
+          creatorDepartment,
+        }) => (
           <div className="m-auto mb-3" key={id}>
             <Card
               className={`rounded-start ${
@@ -19,13 +30,27 @@ export const CurrentCompletedTasks = ({ currentCompletedTasks }) => {
                 } d-flex gap-2 align-items-center d-flex justify-content-between`}
               >
                 <div className="d-flex gap-4">
-                  <Card.Title>{displayName}</Card.Title>
+                  <div className="d-flex gap-2">
+                    <Card.Text className="fw-semibold">
+                      {creatorDepartment}
+                    </Card.Text>
+                    <Card.Text className="fw-semibold">{displayName}</Card.Text>
+                  </div>
+
                   <Card.Text className="fst-italic">
                     {new Date(createdDate.seconds * 1000)
                       .toLocaleString()
                       .slice(0, 10)}
                     {moment(createdDate.toDate()).toString().slice(15, 21)}
                   </Card.Text>
+
+                  <div className="d-flex gap-2">
+                    {" "}
+                    <Card.Text className="fw-semibold">{department}</Card.Text>
+                    <Card.Text className="fw-semibold">
+                      {currentUserName}
+                    </Card.Text>
+                  </div>
 
                   <Card.Text className="fst-italic">
                     {new Date(date.seconds * 1000)
@@ -35,8 +60,12 @@ export const CurrentCompletedTasks = ({ currentCompletedTasks }) => {
                   </Card.Text>
                 </div>
                 <div className=" w-50  d-flex justify-content-between me-5">
-                  <Card.Text className="fw-semibold">{task}</Card.Text>
-                  <Card.Text className="fw-semibold">{explanation}</Card.Text>
+                  <Card.Text className="fw-semibold w-50 text-center">
+                    {task}
+                  </Card.Text>
+                  <Card.Text className="fw-semibold w-50 text-center">
+                    {explanation}
+                  </Card.Text>
                 </div>
               </Card.Body>
             </Card>

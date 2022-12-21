@@ -1,4 +1,5 @@
 import { useAuthContext } from "context/AuthContext";
+import { useUserDocsContext } from "context/UserDocsContext";
 import {
   addDoc,
   collection,
@@ -12,24 +13,27 @@ import {
   EditFirebaseDoc,
 } from "firebaseService/firebaseDocsEditor";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 
 export const Tasks = ({ tasks }) => {
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
-
   const [editedTask, setEditedTask] = useState("");
-  const [cancelValues, setCancelValues] = useState(null);
-
+  const [nulledValue, setNulledValue] = useState(null);
   const [taskId, setTaskId] = useState("");
 
   const currentUser = useAuthContext();
+  const currentUserDocs = useUserDocsContext();
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser]);
 
   const handleAcceptTask = async (
     e,
-    { createdDate, task, displayName, id }
+    { createdDate, task, displayName, id, creatorDepartment }
   ) => {
     e.preventDefault();
     const collectionRef = collection(firebaseService.db, "completed-tasks");
@@ -42,6 +46,9 @@ export const Tasks = ({ tasks }) => {
           createdDate,
           date: serverTimestamp(),
           isDone: true,
+          currentUserName: currentUser.displayName,
+          department: currentUserDocs.department,
+          creatorDepartment,
         });
         await deleteDoc(doc(firebaseService.db, "tasks", id));
       }
@@ -68,15 +75,15 @@ export const Tasks = ({ tasks }) => {
     const event = e.target.explain.value;
 
     try {
-      if (cancelValues && event) {
+      if (nulledValue && event) {
         await addDoc(collectionRef, {
-          ...cancelValues,
+          ...nulledValue,
           date: serverTimestamp(),
           isDone: false,
           explanation: event,
         });
 
-        await deleteDoc(doc(firebaseService.db, "tasks", cancelValues.id));
+        await deleteDoc(doc(firebaseService.db, "tasks", nulledValue.id));
       }
     } catch (error) {
       console.log(error);
@@ -86,92 +93,105 @@ export const Tasks = ({ tasks }) => {
   return (
     <>
       {" "}
-      {tasks.map(({ createdDate, task, displayName, id }) => (
-        <div className="m-auto mb-3" key={id}>
-          <Card
-            style={changeBGcolorAfterTime(createdDate?.toDate())}
-            className={`rounded-start rounded-end  overflow-hidden  shadow`}
-          >
-            <Card.Body
+      {tasks.map(
+        ({ createdDate, task, displayName, id, creatorDepartment }) => (
+          <div className="m-auto mb-3" key={id}>
+            <Card
               style={changeBGcolorAfterTime(createdDate?.toDate())}
-              className={`p-1 bg-opacity-10  d-flex gap-2 align-items-center d-flex justify-content-between`}
+              className={`rounded-start rounded-end  overflow-hidden  shadow`}
             >
-              <div className="">
-                <Card.Title>{displayName}</Card.Title>
-                <Card.Text className="fst-italic">
-                  {new Date(createdDate?.seconds * 1000)
-                    .toLocaleString()
-                    .slice(0, 10)}
-                  {moment(createdDate?.toDate()).toString().slice(15, 21)}
-                </Card.Text>
-              </div>
-              <Card.Text className="fw-semibold">{task}</Card.Text>
-              <div className="d-flex gap-2 align-items-center ">
-                {currentUser?.displayName === "magazyn" ? (
-                  <>
-                    <Button
-                      className=" h-50 d-flex align-items-center "
-                      variant="primary"
-                      onClick={(e) => {
-                        handleAcceptTask(e, {
-                          createdDate,
-                          task,
-                          displayName,
-                          id,
-                        });
-                        setTaskId(id);
-                      }}
-                    >
-                      Zaakceptować
-                    </Button>
-                    <Button
-                      className="h-50 d-flex align-items-center "
-                      variant="primary"
-                      onClick={() => {
-                        setCancelValues({ createdDate, task, displayName, id });
-                        setTaskId(id);
-                        setShowExplanation(true);
-                      }}
-                    >
-                      Anulować
-                    </Button>
-                  </>
-                ) : (
-                  ""
-                )}
-                {currentUser?.displayName === displayName ? (
-                  <>
-                    {" "}
-                    <Button
-                      className="h-50 d-flex align-items-center "
-                      variant="primary"
-                      onClick={() => {
-                        setTaskId(id);
-                        setShowEdit(true);
-                        setEditedTask(task);
-                      }}
-                    >
-                      Edytować
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setTaskId(id);
-                        setShow(true);
-                      }}
-                      className="h-50 d-flex align-items-center "
-                      variant="primary"
-                    >
-                      Usunąć
-                    </Button>
-                  </>
-                ) : (
-                  ""
-                )}
-              </div>
-            </Card.Body>
-          </Card>
-        </div>
-      ))}
+              <Card.Body
+                style={changeBGcolorAfterTime(createdDate?.toDate())}
+                className={`p-1 bg-opacity-10  d-flex gap-2 align-items-center d-flex justify-content-between`}
+              >
+                <div className="">
+                  <div className="d-flex gap-2">
+                    <Card.Title>{creatorDepartment}</Card.Title>
+
+                    <Card.Title>{displayName}</Card.Title>
+                  </div>
+
+                  <Card.Text className="fst-italic">
+                    {new Date(createdDate?.seconds * 1000)
+                      .toLocaleString()
+                      .slice(0, 10)}
+                    {moment(createdDate?.toDate()).toString().slice(15, 21)}
+                  </Card.Text>
+                </div>
+                <Card.Text className="fw-semibold w-50">{task}</Card.Text>
+                <div className="d-flex gap-2 align-items-center ">
+                  {currentUserDocs.department === "magazyn" ? (
+                    <>
+                      <Button
+                        className=" h-50 d-flex align-items-center "
+                        variant="primary"
+                        onClick={(e) => {
+                          handleAcceptTask(e, {
+                            createdDate,
+                            task,
+                            displayName,
+                            id,
+                            creatorDepartment,
+                          });
+                          setTaskId(id);
+                        }}
+                      >
+                        Zaakceptować
+                      </Button>
+                      <Button
+                        className="h-50 d-flex align-items-center "
+                        variant="primary"
+                        onClick={() => {
+                          setNulledValue({
+                            createdDate,
+                            task,
+                            displayName,
+                            id,
+                          });
+                          setTaskId(id);
+                          setShowExplanation(true);
+                        }}
+                      >
+                        Anulować
+                      </Button>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {currentUser?.displayName === displayName ? (
+                    <>
+                      {" "}
+                      <Button
+                        className="h-50 d-flex align-items-center "
+                        variant="primary"
+                        onClick={() => {
+                          setTaskId(id);
+                          setShowEdit(true);
+                          setEditedTask(task);
+                        }}
+                      >
+                        Edytować
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setTaskId(id);
+                          setShow(true);
+                        }}
+                        className="h-50 d-flex align-items-center "
+                        variant="primary"
+                      >
+                        Usunąć
+                      </Button>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        )
+      )}
       <Modal show={show} onHide={() => setShow(false)}>
         {" "}
         <Form className="p-3">
