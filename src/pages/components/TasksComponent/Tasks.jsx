@@ -81,6 +81,8 @@ export const Tasks = ({ tasks }) => {
           date: serverTimestamp(),
           isDone: false,
           explanation: event,
+          department: currentUserDocs.department,
+          currentUserName: currentUser.displayName,
         });
 
         await deleteDoc(doc(firebaseService.db, "tasks", nulledValue.id));
@@ -147,6 +149,7 @@ export const Tasks = ({ tasks }) => {
                             task,
                             displayName,
                             id,
+                            creatorDepartment,
                           });
                           setTaskId(id);
                           setShowExplanation(true);
