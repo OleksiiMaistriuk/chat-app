@@ -59,14 +59,22 @@ export const CurrentCompletedTasks = ({ currentCompletedTasks }) => {
                     {moment(date.toDate()).toString().slice(15, 21)}
                   </Card.Text>
                 </div>
-                <div className=" w-50  d-flex justify-content-between me-5">
-                  <Card.Text className="fw-semibold w-50 text-center">
-                    {task}
-                  </Card.Text>
-                  <Card.Text className="fw-semibold w-50 text-center">
-                    {explanation}
-                  </Card.Text>
-                </div>
+                {explanation ? (
+                  <div className=" w-50  d-flex justify-content-between me-5">
+                    <Card.Text className="fw-semibold w-50 text-center">
+                      {task}
+                    </Card.Text>
+                    <Card.Text className="fw-semibold w-50 text-center">
+                      {explanation}
+                    </Card.Text>
+                  </div>
+                ) : (
+                  <div className=" w-50  d-flex justify-content-between me-5">
+                    <Card.Text className="fw-semibold w-100 text-center">
+                      {task}
+                    </Card.Text>
+                  </div>
+                )}
               </Card.Body>
             </Card>
           </div>
