@@ -3,11 +3,11 @@ import { NavLink, Outlet } from "react-router-dom";
 import { Card, Nav } from "react-bootstrap";
 import { NavBar } from "./components/NavBar";
 
-export const Home = () => {
+export const Tabs = () => {
   return (
     <div className="m-auto ">
       <Card>
-        <Card.Header className="bg-secondary bg-opacity-50 text-white d-flex justify-content-between ">
+        <Card.Header className=" fw-semibold bg-secondary bg-opacity-50 text-white d-flex justify-content-between ">
           <Nav variant="tabs" defaultActiveKey="/tasks" className="pb-1 gap-2">
             <Nav.Item>
               <Nav.Link

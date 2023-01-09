@@ -27,11 +27,11 @@ export const CurrentCompletedTasks = ({ currentCompletedTasks }) => {
               <Card.Body
                 className={`p-1 bg-opacity-10 ${
                   isDone ? "bg-success" : "bg-warning"
-                } d-flex gap-2 align-items-center d-flex justify-content-between`}
+                }   d-flex gap-2 align-items-center d-flex justify-content-between tasks-card`}
               >
-                <div className="d-flex gap-4">
+                <div className="  d-flex gap-4">
                   <div className="d-flex gap-2">
-                    <Card.Text className="fw-semibold">
+                    <Card.Text className="fw-semibold ">
                       {creatorDepartment}
                     </Card.Text>
                     <Card.Text className="fw-semibold">{displayName}</Card.Text>

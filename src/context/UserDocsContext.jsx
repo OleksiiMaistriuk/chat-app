@@ -16,11 +16,11 @@ export const UserDocsContextProvider = ({ children }) => {
   useEffect(() => {
     const getCurrentUserDocs = async () => {
       const querySnapshot = await getDocs(userCollectionRef);
-      console.log(currentUser.uid);
+
       querySnapshot.forEach((doc) => {
-        if (doc.id === currentUser.uid) {
+        if (doc.id === currentUser?.uid) {
           const user = doc.data();
-          console.log(user);
+          // console.log(user);
           setCurrentUserDocs(user);
         }
       });
@@ -28,8 +28,6 @@ export const UserDocsContextProvider = ({ children }) => {
 
     getCurrentUserDocs();
   }, [currentUser]);
-
-  console.log(currentUserDocs);
 
   return (
     <>

@@ -1,10 +1,11 @@
 {
   "include": ["src"],
   "compilerOptions": {
+    "target": "ES2020",
     "baseUrl": "src",
     "module": "ES6",
     "jsx": "preserve",
     "checkJs": true,
-    "moduleResolution": "node"
+    "moduleResolution": "NodeNext"
   }
 }

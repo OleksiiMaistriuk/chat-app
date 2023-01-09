@@ -1,14 +1,14 @@
-import { Route, Routes } from "react-router";
 import { useEffect } from "react";
+import { Route, Routes } from "react-router";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuthContext } from "./context/AuthContext";
 
-import { Container } from "react-bootstrap";
 import { Message } from "pages/components/Message";
 import TasksComponent from "pages/components/TasksComponent";
-import { Home } from "pages/Home";
 import NotFoundPage from "pages/NotFoundPage";
 import { Register } from "pages/Register";
+import { Tabs } from "pages/Tabs";
+import { Container } from "react-bootstrap";
 import CompletedComponent from "./pages/components/CompletedComponent";
 import { Login } from "./pages/Login";
 
@@ -32,7 +32,7 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Home />
+              <Tabs />
             </ProtectedRoute>
           }
         >

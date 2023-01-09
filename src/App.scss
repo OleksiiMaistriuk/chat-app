@@ -24,3 +24,11 @@ p {
 .nav-link:hover {
   background: rgb(129, 129, 129);
 }
+
+@media screen and (max-width: 768px) {
+  .tasks-card {
+    .gap-4 {
+      display: block !important;
+    }
+  }
+}

@@ -13,7 +13,7 @@ import {
   EditFirebaseDoc,
 } from "firebaseService/firebaseDocsEditor";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 
 export const Tasks = ({ tasks }) => {
@@ -27,9 +27,9 @@ export const Tasks = ({ tasks }) => {
   const currentUser = useAuthContext();
   const currentUserDocs = useUserDocsContext();
 
-  useEffect(() => {
-    console.log(currentUser);
-  }, [currentUser]);
+  // useEffect(() => {
+  //   console.log(currentUser);
+  // }, [currentUser]);
 
   const handleAcceptTask = async (
     e,
