@@ -38,8 +38,6 @@ export const CompletedComponent = () => {
     (task) => task.creatorDepartment?.indexOf(currentValue) > -1
   );
 
-  console.log(search);
-
   return (
     <div className="m-auto ">
       <div className="row mb-3">

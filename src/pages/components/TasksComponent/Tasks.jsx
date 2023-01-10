@@ -33,14 +33,16 @@ export const Tasks = ({ tasks }) => {
 
   const handleAcceptTask = async (
     e,
-    { createdDate, task, displayName, id, creatorDepartment }
+    { createdDate, task, mistake, displayName, id, creatorDepartment }
   ) => {
     e.preventDefault();
     const collectionRef = collection(firebaseService.db, "completed-tasks");
     try {
       if (task) {
         await addDoc(collectionRef, {
+          showButton: true,
           task,
+          mistake,
           uid: id,
           displayName,
           createdDate,
@@ -96,7 +98,14 @@ export const Tasks = ({ tasks }) => {
     <>
       {" "}
       {tasks.map(
-        ({ createdDate, task, displayName, id, creatorDepartment }) => (
+        ({
+          createdDate,
+          task,
+          mistake,
+          displayName,
+          id,
+          creatorDepartment,
+        }) => (
           <div className="m-auto mb-3" key={id}>
             <Card
               style={changeBGcolorAfterTime(createdDate?.toDate())}
@@ -120,7 +129,11 @@ export const Tasks = ({ tasks }) => {
                     {moment(createdDate?.toDate()).toString().slice(15, 21)}
                   </Card.Text>
                 </div>
-                <Card.Text className="fw-semibold w-50">{task}</Card.Text>
+                <Card.Text className="fw-semibold w-50">
+                  {task}
+                  <span className="m-1 text-light">{mistake} </span>
+                </Card.Text>
+
                 <div className="d-flex gap-2 align-items-center ">
                   {currentUserDocs.department === "magazyn" ? (
                     <>
@@ -130,6 +143,7 @@ export const Tasks = ({ tasks }) => {
                         onClick={(e) => {
                           handleAcceptTask(e, {
                             createdDate,
+                            mistake,
                             task,
                             displayName,
                             id,

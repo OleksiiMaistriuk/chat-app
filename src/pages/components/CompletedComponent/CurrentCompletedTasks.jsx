@@ -1,13 +1,25 @@
+import { doc, updateDoc } from "firebase/firestore";
+import firebaseService from "firebaseService/index";
 import moment from "moment";
-import { Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
+import { useUserDocsContext } from "./../../../context/UserDocsContext";
 
 export const CurrentCompletedTasks = ({ currentCompletedTasks }) => {
+  const hideButton = async (id) => {
+    const docRef = doc(firebaseService.db, "completed-tasks", `${id}`);
+    await updateDoc(docRef, {
+      showButton: false,
+    });
+  };
+  const currentUserDocs = useUserDocsContext();
   return (
     <>
       {" "}
       {currentCompletedTasks.map(
         ({
+          showButton,
           date,
+          mistake,
           createdDate,
           task,
           displayName,
@@ -72,6 +84,24 @@ export const CurrentCompletedTasks = ({ currentCompletedTasks }) => {
                   <div className=" w-50  d-flex justify-content-between me-5">
                     <Card.Text className="fw-semibold w-100 text-center">
                       {task}
+                      {mistake && (
+                        <span className="m-1 text-light">
+                          {mistake}{" "}
+                          {showButton &&
+                            currentUserDocs.department !== "magazyn" && (
+                              <Button
+                                // @ts-ignore
+                                target="_blank"
+                                href="https://docs.google.com/forms/d/e/1FAIpQLSdQqagsTCDw_e4S5D5DP1GUHhc39uLaeq0Y4vFQg7grTRk66A/viewform?fbzx=4352688829130287798"
+                                className="ms-2 fw-semibold "
+                                variant="outline-info"
+                                onClick={(e) => hideButton(id)}
+                              >
+                                Wpisz błąd
+                              </Button>
+                            )}
+                        </span>
+                      )}
                     </Card.Text>
                   </div>
                 )}
