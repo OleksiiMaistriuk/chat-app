@@ -87,19 +87,18 @@ export const CurrentCompletedTasks = ({ currentCompletedTasks }) => {
                       {mistake && (
                         <span className="m-1 text-light">
                           {mistake}{" "}
-                          {showButton &&
-                            currentUserDocs.department !== "magazyn" && (
-                              <Button
-                                // @ts-ignore
-                                target="_blank"
-                                href="https://docs.google.com/forms/d/e/1FAIpQLSdQqagsTCDw_e4S5D5DP1GUHhc39uLaeq0Y4vFQg7grTRk66A/viewform?fbzx=4352688829130287798"
-                                className="ms-2 fw-semibold "
-                                variant="outline-info"
-                                onClick={(e) => hideButton(id)}
-                              >
-                                Wpisz błąd
-                              </Button>
-                            )}
+                          {showButton && (
+                            <Button
+                              // @ts-ignore
+                              target="_blank"
+                              href="https://docs.google.com/forms/d/e/1FAIpQLSdQqagsTCDw_e4S5D5DP1GUHhc39uLaeq0Y4vFQg7grTRk66A/viewform?fbzx=4352688829130287798"
+                              className="ms-2 fw-semibold "
+                              variant="outline-info"
+                              onClick={(e) => hideButton(id)}
+                            >
+                              Wpisz błąd
+                            </Button>
+                          )}
                         </span>
                       )}
                     </Card.Text>

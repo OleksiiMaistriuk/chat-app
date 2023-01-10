@@ -2,10 +2,12 @@ import { useAuthContext } from "context/AuthContext";
 import { useUserDocsContext } from "context/UserDocsContext";
 import {
   addDoc,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import firebaseService from "firebaseService";
 import {
@@ -13,23 +15,30 @@ import {
   EditFirebaseDoc,
 } from "firebaseService/firebaseDocsEditor";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 
 export const Tasks = ({ tasks }) => {
   const [show, setShow] = useState(false);
+
   const [showEdit, setShowEdit] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
   const [editedTask, setEditedTask] = useState("");
   const [nulledValue, setNulledValue] = useState(null);
   const [taskId, setTaskId] = useState("");
+  const [message, setMessage] = useState("");
+  const [editIndex, setEditIndex] = useState(null);
 
   const currentUser = useAuthContext();
   const currentUserDocs = useUserDocsContext();
 
-  // useEffect(() => {
-  //   console.log(currentUser);
-  // }, [currentUser]);
+  useEffect(() => {
+    console.log(editIndex);
+    const items = JSON.parse(localStorage.getItem("id"));
+    if (items) {
+      setEditIndex(items);
+    }
+  }, []);
 
   const handleAcceptTask = async (
     e,
@@ -93,6 +102,20 @@ export const Tasks = ({ tasks }) => {
       console.log(error);
     }
   };
+  const addChat = async (e, docId) => {
+    e.preventDefault();
+
+    if (message) {
+      try {
+        await updateDoc(doc(firebaseService.db, "tasks", docId), {
+          chat: arrayUnion(message + " "),
+        });
+        setMessage("");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <>
@@ -105,6 +128,7 @@ export const Tasks = ({ tasks }) => {
           displayName,
           id,
           creatorDepartment,
+          chat,
         }) => (
           <div className="m-auto mb-3" key={id}>
             <Card
@@ -135,6 +159,58 @@ export const Tasks = ({ tasks }) => {
                 </Card.Text>
 
                 <div className="d-flex gap-2 align-items-center ">
+                  {editIndex === id && (
+                    <div>
+                      <Card border="info" style={{ width: "18rem" }}>
+                        <Card.Body>
+                          <div className="text-dark">
+                            {chat &&
+                              chat.map((mes, index) => (
+                                <p
+                                  className={`${
+                                    index & 1 ? "text-end text-secondary" : ""
+                                  } fw-semibold text-uppercase`}
+                                  key={index}
+                                >
+                                  {mes}
+                                </p>
+                              ))}
+                          </div>
+                        </Card.Body>
+                      </Card>
+                      <Form className="d-flex" onSubmit={(e) => addChat(e, id)}>
+                        <Form.Group className="mb-3" controlId="task">
+                          <Form.Control
+                            className="fs-6  bg-opacity-75 fw-semibold"
+                            value={message}
+                            autoFocus
+                            type="text"
+                            onChange={(e) => setMessage(e.target.value)}
+                          />
+                        </Form.Group>
+                        <Button
+                          type="submit"
+                          className="h-50 d-flex align-items-center "
+                          variant="info"
+                        >
+                          Wyslać
+                        </Button>
+                      </Form>
+                    </div>
+                  )}
+                  <Button
+                    className="h-50 d-flex align-items-center "
+                    variant="danger"
+                    onClick={() => {
+                      setEditIndex((editIndex) =>
+                        editIndex === id ? null : id
+                      );
+                      localStorage.setItem("id", JSON.stringify(id));
+                    }}
+                  >
+                    chat
+                  </Button>
+
                   {currentUserDocs.department === "magazyn" ? (
                     <>
                       <Button
